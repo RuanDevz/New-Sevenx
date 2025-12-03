@@ -107,7 +107,7 @@ const Header: React.FC = () => {
         : 'bg-gradient-to-r from-white via-gray-50 to-white border-gray-200/30'
     }`}>
 
-      <BlackFridayBanner/>
+      {/* <BlackFridayBanner/> */}
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
           {/* Logo Section */}

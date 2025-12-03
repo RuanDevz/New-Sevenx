@@ -157,8 +157,7 @@ const Plans: React.FC = () => {
       gradient: isDark
         ? "from-gray-900 via-black to-gray-900"
         : "from-black via-gray-900 to-black",
-      price: 199.99,
-      originalPrice: 499,
+      price: 499.99,
       features: [
         { icon: Flame, text: "LIFETIME ACCESS - Forever!", highlight: true },
         { icon: Check, text: "Everything in DIAMOND" },
@@ -412,9 +411,6 @@ const Plans: React.FC = () => {
 
               <div className="mb-6 relative">
                 <div className="flex items-baseline gap-2">
-                  <span className={`text-2xl font-bold line-through ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                    ${plans.lifetime.originalPrice}
-                  </span>
                   <span className={`text-4xl font-black font-orbitron ${
                     isDark
                       ? 'text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-500'

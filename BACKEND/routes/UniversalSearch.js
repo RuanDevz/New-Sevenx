@@ -141,7 +141,7 @@ async function safeModelSearch(model, whereClause, sortBy, sortOrder, q, categor
       ['id', sortOrder],
     ],
     attributes: cols,
-    limit: 300,
+    limit: 600,
     raw: true,
   }).catch(err => {
     console.error(`[safeModelSearch] Query error for model ${model.name}:`, err.message);
