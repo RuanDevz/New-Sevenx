@@ -141,7 +141,6 @@ async function safeModelSearch(model, whereClause, sortBy, sortOrder, q, categor
       ['id', sortOrder],
     ],
     attributes: cols,
-    limit: 600,
     raw: true,
   }).catch(err => {
     console.error(`[safeModelSearch] Query error for model ${model.name}:`, err.message);
@@ -170,7 +169,7 @@ router.get('/search', async (req, res) => {
   const t0 = Date.now();
 
   const page = Math.max(parseInt(req.query.page || '1'), 1);
-  const limit = Math.min(Math.max(parseInt(req.query.limit || '300'), 1), 500);
+  const limit = Math.min(Math.max(parseInt(req.query.limit || ''), 1), 500);
   const sortBy = req.query.sortBy || 'postDate';
   const sortOrder = (String(req.query.sortOrder || 'DESC').toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
 
