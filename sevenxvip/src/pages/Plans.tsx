@@ -150,7 +150,7 @@ const Plans: React.FC = () => {
         { icon: Star, text: billingCycle === "annual" ? "2 Request tickets (2/month)" : "1 Request tickets (1/month)", highlight: true },
       ]
     },
-    vitality: {
+    lifetime: {
       name: "BLACK FRIDAY LIFETIME",
       icon: Flame,
       color: "black",
@@ -365,7 +365,7 @@ const Plans: React.FC = () => {
               </button>
             </motion.div>
 
-            {/* Vitality Plan */}
+            {/* lifetime Plan */}
             <motion.div
               key="lifetime"
               initial={{ opacity: 0, y: 20 }}
@@ -393,7 +393,7 @@ const Plans: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-3 mb-4 mt-2 relative">
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${plans.vitality.gradient} shadow-lg animate-pulse`}>
+                <div className={`p-3 rounded-xl bg-gradient-to-br ${plans.lifetime.gradient} shadow-lg animate-pulse`}>
                   <Flame className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -413,14 +413,14 @@ const Plans: React.FC = () => {
               <div className="mb-6 relative">
                 <div className="flex items-baseline gap-2">
                   <span className={`text-2xl font-bold line-through ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                    ${plans.vitality.originalPrice}
+                    ${plans.lifetime.originalPrice}
                   </span>
                   <span className={`text-4xl font-black font-orbitron ${
                     isDark
                       ? 'text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-500'
                       : 'text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-black'
                   }`}>
-                    ${plans.vitality.price}
+                    ${plans.lifetime.price}
                   </span>
                 </div>
                 <p className={`text-xs mt-2 font-bold ${isDark ? 'text-green-400' : 'text-green-600'}`}>
@@ -429,7 +429,7 @@ const Plans: React.FC = () => {
               </div>
 
               <ul className="space-y-3 mb-6 relative flex-grow">
-                {plans.vitality.features.map((feature, index) => (
+                {plans.lifetime.features.map((feature, index) => (
                   <motion.li
                     key={index}
                     initial={{ opacity: 0, x: -20 }}

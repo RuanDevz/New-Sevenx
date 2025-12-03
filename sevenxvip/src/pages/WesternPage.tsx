@@ -126,23 +126,30 @@ const WesternPage: React.FC = () => {
       );
 
       const { data: allData, totalPages } = decoded;
-      
-      // Se há busca, mostra todos os conteúdos. Se não há busca, mostra apenas Western
-      const rawData = searchName 
-        ? allData.filter(item => !item.contentType || !item.contentType.startsWith('vip')) // Busca global FREE - exclui VIP
-        : allData.filter(item => item.contentType === 'western'); // Sem busca - só Western
+
+      const rawData = searchName
+        ? allData.filter(item => !item.contentType || !item.contentType.startsWith('vip'))
+        : allData.filter(item => item.contentType === 'western');
 
       if (isLoadMore) {
-        setLinks((prev) => [...prev, ...rawData]);
-        setFilteredLinks((prev) => [...prev, ...rawData]);
+        setLinks((prev) => {
+          const existingIds = new Set(prev.map(item => item.id));
+          const newItems = rawData.filter(item => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
+        setFilteredLinks((prev) => {
+          const existingIds = new Set(prev.map(item => item.id));
+          const newItems = rawData.filter(item => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
         appendToCache('western', rawData, page);
       } else {
         setLinks(rawData);
         setFilteredLinks(rawData);
-        setCurrentPage(1);
       }
 
       setTotalPages(totalPages);
+      setCurrentPage(page);
       const hasMore = page < totalPages && rawData.length > 0;
       setHasMoreContent(hasMore);
 
@@ -166,7 +173,7 @@ const WesternPage: React.FC = () => {
         setCache('western', {
           links: rawData,
           categories: [...categories, ...uniqueCategories],
-          currentPage: 1,
+          currentPage: page,
           totalPages,
           hasMoreContent: hasMore,
           filters: { searchName, selectedCategory, selectedMonth, dateFilter },
@@ -211,9 +218,26 @@ const WesternPage: React.FC = () => {
   const handleLoadMore = () => {
     if (loadingMore || !hasMoreContent || currentPage >= totalPages) return;
     const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
     fetchContent(nextPage, true);
   };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loadingMore && hasMoreContent && currentPage < totalPages) {
+          handleLoadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    const sentinel = document.getElementById('scroll-sentinel');
+    if (sentinel) observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [loadingMore, hasMoreContent, currentPage, totalPages]);
 
   const recentLinks = filteredLinks.slice(0, 5);
 
@@ -465,32 +489,18 @@ const WesternPage: React.FC = () => {
                   </div>
                 ))}
 
-              {hasMoreContent && (
-                <div className="text-center mt-12 py-8">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleLoadMore}
-                    disabled={loadingMore}
-                    className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
-                      loadingMore
-                        ? 'bg-gray-600 cursor-not-allowed'
-                        : isDark
-                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg hover:shadow-orange-500/30'
-                          : 'bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 shadow-lg hover:shadow-orange-500/20'
-                    } text-white`}
-                  >
-                    {loadingMore ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block mr-2" />
-                        Loading...
-                      </>
-                    ) : (
-                      'Load More Content'
-                    )}
-                  </motion.button>
-                </div>
-              )}
+              <div id="scroll-sentinel" className="h-20 flex items-center justify-center">
+                {loadingMore && (
+                  <div className="flex items-center gap-3">
+                    <div className={`w-6 h-6 border-2 border-t-transparent rounded-full animate-spin ${
+                      isDark ? 'border-orange-500' : 'border-orange-600'
+                    }`} />
+                    <span className={`text-sm font-medium ${isDark ? 'text-orange-400' : 'text-orange-600'}`}>
+                      Loading more content...
+                    </span>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div className="text-center py-20">

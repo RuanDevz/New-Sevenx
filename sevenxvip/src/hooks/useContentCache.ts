@@ -70,7 +70,7 @@ export const useContentCache = ({ contentType, filterFn, requiresAuth = false }:
         page: page.toString(),
         sortBy: 'postDate',
         sortOrder: 'DESC',
-        limit: '300',
+        limit: '110',
       });
 
       if (searchName) params.append('search', searchName);
@@ -105,16 +105,24 @@ export const useContentCache = ({ contentType, filterFn, requiresAuth = false }:
       const rawData = filterFn ? filterFn(allData) : allData;
 
       if (isLoadMore) {
-        setLinks((prev) => [...prev, ...rawData]);
-        setFilteredLinks((prev) => [...prev, ...rawData]);
+        setLinks((prev) => {
+          const existingIds = new Set(prev.map(item => item.id));
+          const newItems = rawData.filter(item => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
+        setFilteredLinks((prev) => {
+          const existingIds = new Set(prev.map(item => item.id));
+          const newItems = rawData.filter(item => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
         appendToCache(contentType, rawData, page);
       } else {
         setLinks(rawData);
         setFilteredLinks(rawData);
-        setCurrentPage(1);
       }
 
       setTotalPages(totalPages);
+      setCurrentPage(page);
       const hasMore = page < totalPages && rawData.length > 0;
       setHasMoreContent(hasMore);
 
@@ -132,7 +140,7 @@ export const useContentCache = ({ contentType, filterFn, requiresAuth = false }:
         setCache(contentType, {
           links: rawData,
           categories: [...categories, ...uniqueCategories],
-          currentPage: 1,
+          currentPage: page,
           totalPages,
           hasMoreContent: hasMore,
           filters: { searchName, selectedCategory, selectedMonth, dateFilter },
@@ -175,7 +183,6 @@ export const useContentCache = ({ contentType, filterFn, requiresAuth = false }:
   const handleLoadMore = useCallback(() => {
     if (loadingMore || !hasMoreContent || currentPage >= totalPages) return;
     const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
     fetchContent(nextPage, true);
   }, [loadingMore, hasMoreContent, currentPage, totalPages, fetchContent]);
 

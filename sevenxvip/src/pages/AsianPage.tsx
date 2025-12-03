@@ -137,16 +137,24 @@ const AsianPage: React.FC = () => {
         : allData.filter((item) => item.contentType === "asian");
 
       if (isLoadMore) {
-        setLinks((prev) => [...prev, ...rawData]);
-        setFilteredLinks((prev) => [...prev, ...rawData]);
+        setLinks((prev) => {
+          const existingIds = new Set(prev.map(item => item.id));
+          const newItems = rawData.filter(item => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
+        setFilteredLinks((prev) => {
+          const existingIds = new Set(prev.map(item => item.id));
+          const newItems = rawData.filter(item => !existingIds.has(item.id));
+          return [...prev, ...newItems];
+        });
         appendToCache('asian', rawData, page);
       } else {
         setLinks(rawData);
         setFilteredLinks(rawData);
-        setCurrentPage(1);
       }
 
       setTotalPages(totalPages);
+      setCurrentPage(page);
       const hasMore = page < totalPages && rawData.length > 0;
       setHasMoreContent(hasMore);
 
@@ -160,12 +168,11 @@ const AsianPage: React.FC = () => {
         return [...prev, ...newCategories];
       });
 
-      // Salvar no cache apenas se não for load more
       if (!isLoadMore) {
         setCache('asian', {
           links: rawData,
           categories: [...categories, ...uniqueCategories],
-          currentPage: 1,
+          currentPage: page,
           totalPages,
           hasMoreContent: hasMore,
           filters: { searchName, selectedCategory, selectedMonth, dateFilter },
@@ -185,7 +192,6 @@ const AsianPage: React.FC = () => {
   useEffect(() => {
     const currentFilters = { searchName, selectedCategory, selectedMonth, dateFilter };
 
-    // Verifica se existe cache válido com os mesmos filtros
     if (isCacheValid('asian', currentFilters)) {
       const cache = getCache('asian');
       if (cache) {
@@ -200,7 +206,6 @@ const AsianPage: React.FC = () => {
       }
     }
 
-    // Se não há cache válido, busca os dados
     const timer = setTimeout(() => {
       setHasMoreContent(true);
       fetchContent(1);
@@ -211,9 +216,26 @@ const AsianPage: React.FC = () => {
   const handleLoadMore = () => {
     if (loadingMore || !hasMoreContent || currentPage >= totalPages) return;
     const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
     fetchContent(nextPage, true);
   };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loadingMore && hasMoreContent && currentPage < totalPages) {
+          handleLoadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    const sentinel = document.getElementById('scroll-sentinel');
+    if (sentinel) observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [loadingMore, hasMoreContent, currentPage, totalPages]);
 
   const recentLinks = filteredLinks.slice(0, 5);
 
@@ -463,36 +485,18 @@ const AsianPage: React.FC = () => {
 
                                     
 
-              {hasMoreContent && (
-                <div className="text-center mt-12 py-8">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleLoadMore}
-                    disabled={loadingMore}
-                    className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
-                      loadingMore
-                        ? 'bg-gray-600 cursor-not-allowed'
-                        : isDark
-                          ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-lg hover:shadow-purple-500/30'
-                          : 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-lg hover:shadow-purple-500/20'
-                    } text-white`}
-                  >
-                    
-                    {loadingMore ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block mr-2" />
-                        Loading...
-                      </>
-                    ) : (
-                      'Load More Content'
-                    )}
-                    
-                  </motion.button>
-                </div>
-
-                
-              )}
+              <div id="scroll-sentinel" className="h-20 flex items-center justify-center">
+                {loadingMore && (
+                  <div className="flex items-center gap-3">
+                    <div className={`w-6 h-6 border-2 border-t-transparent rounded-full animate-spin ${
+                      isDark ? 'border-purple-500' : 'border-purple-600'
+                    }`} />
+                    <span className={`text-sm font-medium ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>
+                      Loading more content...
+                    </span>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div className="text-center py-20">

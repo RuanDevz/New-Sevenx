@@ -242,6 +242,24 @@ const VIPWesternPage: React.FC = () => {
     fetchContent(nextPage, true);
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loadingMore && hasMoreContent && currentPage < totalPages) {
+          handleLoadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    const sentinel = document.getElementById('scroll-sentinel-vip-western');
+    if (sentinel) observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [loadingMore, hasMoreContent, currentPage, totalPages]);
+
   const recentLinks = [...filteredLinks]
     .sort((a, b) => new Date(b.postDate).getTime() - new Date(a.postDate).getTime())
     .slice(0, 5);
@@ -511,32 +529,18 @@ const VIPWesternPage: React.FC = () => {
                   </div>
                 ))}
 
-              {hasMoreContent && (
-                <div className="text-center mt-12 py-8">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleLoadMore}
-                    disabled={loadingMore}
-                    className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 ${
-                      loadingMore
-                        ? 'bg-gray-600 cursor-not-allowed'
-                        : isDark
-                          ? 'bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 shadow-lg hover:shadow-yellow-500/30'
-                          : 'bg-gradient-to-r from-yellow-600 to-orange-700 hover:from-yellow-700 hover:to-orange-800 shadow-lg hover:shadow-yellow-500/20'
-                    } text-black`}
-                  >
-                    {loadingMore ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin inline-block mr-2" />
-                        Loading...
-                      </>
-                    ) : (
-                      'Load More VIP Content'
-                    )}
-                  </motion.button>
-                </div>
-              )}
+              <div id="scroll-sentinel-vip-western" className="h-20 flex items-center justify-center">
+                {loadingMore && (
+                  <div className="flex items-center gap-3">
+                    <div className={`w-6 h-6 border-2 border-t-transparent rounded-full animate-spin ${
+                      isDark ? 'border-yellow-500' : 'border-orange-600'
+                    }`} />
+                    <span className={`text-sm font-medium ${isDark ? 'text-yellow-400' : 'text-orange-600'}`}>
+                      Loading more VIP content...
+                    </span>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div className="text-center py-20">
