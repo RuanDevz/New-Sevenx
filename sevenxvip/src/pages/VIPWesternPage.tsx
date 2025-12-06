@@ -501,7 +501,7 @@ const VIPWesternPage: React.FC = () => {
                                   <Crown className="w-3 h-3 mr-2" />
                                   {link.category}
                                 </span>
-                                {/* {link.preview && (
+                                 {link.preview && (
                                   <button
                                     onClick={(e) => {
                                       e.preventDefault();
@@ -519,7 +519,7 @@ const VIPWesternPage: React.FC = () => {
                                   >
                                     <i className="fa-solid fa-eye text-sm"></i>
                                   </button>
-                                )} */}
+                                )} 
                               </div>
                             </div>
                           </motion.div>
@@ -566,7 +566,7 @@ const VIPWesternPage: React.FC = () => {
         </main>
       </div>
 
-      {/* {showPreview && (
+       {showPreview && (
         <PreviewModal
           imageUrl={showPreview}
           contentName={previewContentName}
@@ -575,7 +575,7 @@ const VIPWesternPage: React.FC = () => {
             setPreviewContentName("");
           }}
         />
-      )} */}
+      )}
     </div>
   );
 };

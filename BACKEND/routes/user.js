@@ -226,14 +226,14 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({ where: { email } });
         if (!user) {
             console.warn('[LOGIN] Usuário não encontrado:', email);
-            return res.status(401).json({ error: "Credenciais incorretas!" });
+            return res.status(401).json({ error: "Incorrect credentials!" });
         }
 
         const passwordMatch = bcrypt.compareSync(password, user.password);
         console.log('[LOGIN] Comparação de senha:', passwordMatch);
 
         if (!passwordMatch) {
-            return res.status(401).json({ error: "Credenciais incorretas!" });
+            return res.status(401).json({ error: "Incorrect credentials!" });
         }
 
         if (!process.env.TOKEN_VERIFY_ACCESS) {

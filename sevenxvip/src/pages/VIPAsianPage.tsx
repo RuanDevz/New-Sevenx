@@ -9,6 +9,7 @@ import { useTheme } from "../contexts/ThemeContext";
 import MonthFilter from "../components/MonthFilter";
 import CategoryFilter from "../components/CategoryFilter";
 import { useContentCache } from "../hooks/useContentCache";
+import { PreviewModal } from "../components/PreviewModal";
 
 type LinkItem = {
   id: string;
@@ -19,6 +20,7 @@ type LinkItem = {
   thumbnail?: string;
   createdAt: string;
   contentType?: string;
+  preview?: string
 };
 
 type Category = {
@@ -43,6 +45,8 @@ const VIPAsianPage: React.FC = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const isDark = theme === "dark";
+    const [showPreview, setShowPreview] = useState<string | null>(null);
+    const [previewContentName, setPreviewContentName] = useState<string>("");
 
   const {
     links,
@@ -346,7 +350,7 @@ const VIPAsianPage: React.FC = () => {
       <Crown className="w-3 h-3 mr-2" />
       {link.category}
     </span>
-    {/* {link.preview && (
+     {link.preview && (
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -364,7 +368,7 @@ const VIPAsianPage: React.FC = () => {
       >
         <i className="fa-solid fa-eye text-sm"></i>
       </button>
-    )} */}
+    )} 
   </div>
 </div>
 
@@ -407,6 +411,16 @@ const VIPAsianPage: React.FC = () => {
           )}
         </main>
       </div>
+             {showPreview && (
+              <PreviewModal
+                imageUrl={showPreview}
+                contentName={previewContentName}
+                onClose={() => {
+                  setShowPreview(null);
+                  setPreviewContentName("");
+                }}
+              />
+            )}
     </div>
   );
 };
