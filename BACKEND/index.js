@@ -198,6 +198,7 @@ const initializeDatabase = async () => {
         console.log(`🚀 Servidor rodando na porta ${PORT}...`);
       });
 
+
       // 🔸 Removido o fechamento automático de conexões (mantém estável)
       process.on('SIGTERM', () => {
         console.log('🟡 SIGTERM recebido. Servidor será encerrado pelo sistema.');

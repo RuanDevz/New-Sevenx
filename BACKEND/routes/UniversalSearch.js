@@ -124,7 +124,7 @@ async function safeModelSearch(model, whereClause, sortBy, sortOrder, q, categor
   }
 
   const normalAttributes = ['id', 'name', 'slug', 'category', 'preview', 'postDate', 'createdAt'];
-  const vipAttributes = ['id', 'name', 'slug', 'category', 'postDate', 'createdAt'];
+  const vipAttributes = ['id', 'name', 'slug', 'category','preview', 'postDate', 'createdAt'];
 
   const isVIP = [
     'VipAsianContent', 'VipWesternContent',
