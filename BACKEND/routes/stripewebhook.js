@@ -245,7 +245,7 @@ router.post(
             // Plano vitalício: adicionar 999999 dias a partir de agora
             const now = new Date();
             newExpiration = new Date(now.getTime() + (999999 * 24 * 60 * 60 * 1000));
-            requestTickets = 10;
+            requestTickets = 2;
           } else {
             // Planos normais: usar o período oficial da Stripe
             const periodEnd = toDateFromUnix(subscription.current_period_end);
@@ -262,7 +262,7 @@ router.post(
             if (vipTier === 'diamond') {
               requestTickets = subscriptionType === 'annual' ? 2 : 1;
             } else if (vipTier === 'titanium') {
-              requestTickets = 5;
+              requestTickets = 1;
             }
           }
 

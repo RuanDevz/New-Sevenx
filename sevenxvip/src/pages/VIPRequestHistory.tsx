@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/Authcontext';
 import { useTheme } from '../contexts/ThemeContext';
-import VIPHeader from '../components/VIP/VIPHeader';
 import Footer from '../components/Footer';
 
 interface VIPRequest {
@@ -17,16 +16,13 @@ interface VIPRequest {
   rejectionReason: string;
   createdAt: string;
   processedAt: string | null;
-  processor?: {
-    name: string;
-    email: string;
-  };
 }
 
 const VIPRequestHistory = () => {
   const { theme } = useTheme();
   const { isVip, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState<VIPRequest[]>([]);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
@@ -38,22 +34,23 @@ const VIPRequestHistory = () => {
       return;
     }
     fetchRequests();
-  }, [isAuthenticated, isVip, navigate, filter]);
+  }, [filter]); // evitar loops desnecessários
 
   const fetchRequests = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('Token'); // corrigido
       const apiKey = import.meta.env.VITE_API_KEY;
 
-      const url = filter === 'all'
-        ? `${import.meta.env.VITE_API_URL}/vip-requests/my-requests`
-        : `${import.meta.env.VITE_API_URL}/vip-requests/my-requests?status=${filter}`;
+      const url =
+        filter === 'all'
+          ? `${import.meta.env.VITE_API_URL}/vip-requests/my-requests`
+          : `${import.meta.env.VITE_API_URL}/vip-requests/my-requests?status=${filter}`;
 
       const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'x-api-key': apiKey
-        }
+          Authorization: `Bearer ${token}`,
+          'x-api-key': apiKey,
+        },
       });
 
       if (response.ok) {
@@ -74,7 +71,7 @@ const VIPRequestHistory = () => {
     const badges = {
       pending: 'bg-yellow-500 bg-opacity-20 text-yellow-500 border-yellow-500',
       approved: 'bg-green-500 bg-opacity-20 text-green-500 border-green-500',
-      rejected: 'bg-red-500 bg-opacity-20 text-red-500 border-red-500'
+      rejected: 'bg-red-500 bg-opacity-20 text-red-500 border-red-500',
     };
     return badges[status as keyof typeof badges] || badges.pending;
   };
@@ -85,24 +82,14 @@ const VIPRequestHistory = () => {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <VIPHeader />
-        <div className="flex items-center justify-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
-      <VIPHeader />
+      
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -145,9 +132,11 @@ const VIPRequestHistory = () => {
         </div>
 
         {requests.length === 0 ? (
-          <div className={`p-12 rounded-lg text-center ${
-            theme === 'dark' ? 'bg-gray-800' : 'bg-white'
-          } shadow-lg`}>
+          <div
+            className={`p-12 rounded-lg text-center ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+            } shadow-lg`}
+          >
             <h3 className="text-2xl font-bold mb-4">No Requests Found</h3>
             <p className={`mb-6 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
               {filter === 'all'
@@ -187,6 +176,7 @@ const VIPRequestHistory = () => {
                         <span className="font-semibold">Content Type:</span>
                         <span className="capitalize">{request.contentType}</span>
                       </div>
+
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">Social Profile:</span>
                         <a
@@ -198,16 +188,19 @@ const VIPRequestHistory = () => {
                           {request.socialProfileLink}
                         </a>
                       </div>
+
                       {request.additionalDetails && (
                         <div className="flex items-start gap-2">
                           <span className="font-semibold">Details:</span>
                           <span>{request.additionalDetails}</span>
                         </div>
                       )}
+
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">Submitted:</span>
                         <span>{formatDate(request.createdAt)}</span>
                       </div>
+
                       {request.processedAt && (
                         <div className="flex items-center gap-2">
                           <span className="font-semibold">Processed:</span>

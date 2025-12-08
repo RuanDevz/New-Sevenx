@@ -171,6 +171,7 @@ const initializeDatabase = async () => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       await db.sequelize.authenticate();
+      
       console.log('✅ Conexão Sequelize estabelecida com sucesso.');
       return true;
     } catch (error) {

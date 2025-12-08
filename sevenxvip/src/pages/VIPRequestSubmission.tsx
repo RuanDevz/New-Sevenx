@@ -145,20 +145,11 @@ const VIPRequestSubmission = () => {
   };
 
   // Tela de carregamento do auth
-  if (loadingAuth || loading) {
-    return (
-      <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <VIPHeader />
-        <div className="flex items-center justify-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
-      <VIPHeader />
+      
 
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
