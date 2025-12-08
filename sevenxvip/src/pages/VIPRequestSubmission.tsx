@@ -22,7 +22,7 @@ interface FormData {
 
 const VIPRequestSubmission = () => {
   const { theme } = useTheme();
-  const { isVip, isAuthenticated } = useAuth();
+  const { isVip, isAuthenticated, loadingAuth } = useAuth(); // IMPORTANTE
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -38,12 +38,16 @@ const VIPRequestSubmission = () => {
   });
 
   useEffect(() => {
+    // Não redirecionar até o contexto terminar de carregar
+    if (loadingAuth) return;
+
     if (!isAuthenticated || !isVip) {
       navigate('/');
       return;
     }
+
     fetchRequestLimits();
-  }, [isAuthenticated, isVip, navigate]);
+  }, [isAuthenticated, isVip, loadingAuth, navigate]);
 
   const fetchRequestLimits = async () => {
     try {
@@ -140,7 +144,8 @@ const VIPRequestSubmission = () => {
     });
   };
 
-  if (loading) {
+  // Tela de carregamento do auth
+  if (loadingAuth || loading) {
     return (
       <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <VIPHeader />
@@ -244,7 +249,7 @@ const VIPRequestSubmission = () => {
                   value={formData.socialProfileLink}
                   onChange={handleInputChange}
                   required
-                  placeholder="https://instagram.com/model or https://twitter.com/model"
+                  placeholder="https://instagram.com/model"
                   className={`w-full px-4 py-3 rounded-lg border ${
                     theme === 'dark'
                       ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
@@ -283,7 +288,7 @@ const VIPRequestSubmission = () => {
                   value={formData.additionalDetails}
                   onChange={handleInputChange}
                   rows={4}
-                  placeholder="Provide any additional information about your request..."
+                  placeholder="Provide any additional information..."
                   className={`w-full px-4 py-3 rounded-lg border ${
                     theme === 'dark'
                       ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
@@ -296,10 +301,11 @@ const VIPRequestSubmission = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:opacity-50"
                 >
                   {submitting ? 'Submitting...' : 'Submit Request'}
                 </button>
+
                 <button
                   type="button"
                   onClick={() => navigate('/vip-requests/history')}
@@ -307,7 +313,7 @@ const VIPRequestSubmission = () => {
                     theme === 'dark'
                       ? 'bg-gray-700 hover:bg-gray-600'
                       : 'bg-gray-200 hover:bg-gray-300'
-                  } transition-colors duration-200`}
+                  }`}
                 >
                   View History
                 </button>
@@ -332,7 +338,7 @@ const VIPRequestSubmission = () => {
             )}
             <button
               onClick={() => navigate('/vip-requests/history')}
-              className="mt-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-8 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200"
+              className="mt-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-8 rounded-lg font-semibold"
             >
               View Request History
             </button>
