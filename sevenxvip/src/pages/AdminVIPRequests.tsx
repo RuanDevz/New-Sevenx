@@ -73,6 +73,7 @@ const AdminVIPRequests = () => {
   useEffect(() => {
     fetchRequests();
     fetchStats();
+    console.log(isAuthenticated)
   }, [isAuthenticated, navigate, filter, tierFilter]);
 
   const fetchRequests = async () => {

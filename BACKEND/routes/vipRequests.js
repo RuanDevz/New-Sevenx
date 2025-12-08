@@ -154,8 +154,18 @@ router.get('/my-limits', verifyToken, async (req, res) => {
       }
     });
 
+    // Limite de requests por VIP
     const requestLimit = user.vipTier === 'lifetime' ? 2 : user.vipTier === 'diamond' ? 1 : 0;
-    const nextResetDate = user.vipExpirationDate || new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    // Próximo reset: se ainda não usou tudo, é fim do mês; se usou todos, reseta na mesma lógica
+    let nextResetDate;
+    if (usedThisMonth >= requestLimit) {
+      // Se usou tudo, o reset será no início do próximo mês
+      nextResetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    } else {
+      // Ainda tem tickets, reseta no início do próximo mês
+      nextResetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    }
 
     res.json({
       tier: user.vipTier,
@@ -170,6 +180,7 @@ router.get('/my-limits', verifyToken, async (req, res) => {
     res.status(500).json({ message: 'Error fetching request limits' });
   }
 });
+
 
 router.get('/admin/all', verifyToken, isAdmin, async (req, res) => {
   try {

@@ -38,14 +38,7 @@ const VIPRequestSubmission = () => {
   });
 
   useEffect(() => {
-    // Não redirecionar até o contexto terminar de carregar
-    if (loadingAuth) return;
-
-    if (!isAuthenticated || !isVip) {
-      navigate('/');
-      return;
-    }
-
+    console.log('tem limite')
     fetchRequestLimits();
   }, [isAuthenticated, isVip, loadingAuth, navigate]);
 
