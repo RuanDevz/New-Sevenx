@@ -20,31 +20,32 @@ interface VIPRequest {
 
 const VIPRequestHistory = () => {
   const { theme } = useTheme();
-  const { isVip, isAuthenticated } = useAuth();
+  const { isVip } = useAuth();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState<VIPRequest[]>([]);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
   const [error, setError] = useState('');
+  const isAuthenticated = localStorage.getItem('Token')
+useEffect(() => {
+  if (!isAuthenticated) {
+    navigate('/');
+    return;
+  }
 
-  useEffect(() => {
-    if (!isAuthenticated || !isVip) {
-      navigate('/');
-      return;
-    }
-    fetchRequests();
-  }, [filter]); // evitar loops desnecessários
+  fetchRequests();
+}, [filter]);
 
   const fetchRequests = async () => {
     try {
       const token = localStorage.getItem('Token'); // corrigido
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const apiKey = import.meta.env.VITE_FRONTEND_API_KEY;
 
       const url =
         filter === 'all'
-          ? `${import.meta.env.VITE_API_URL}/vip-requests/my-requests`
-          : `${import.meta.env.VITE_API_URL}/vip-requests/my-requests?status=${filter}`;
+          ? `${import.meta.env.VITE_BACKEND_URL}/vip-requests/my-requests`
+          : `${import.meta.env.VITE_BACKEND_URL}/vip-requests/my-requests?status=${filter}`;
 
       const response = await fetch(url, {
         headers: {

@@ -67,7 +67,7 @@ const AdminContentRequests: React.FC = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'x-api-key': import.meta.env.VITE_API_KEY
+            'x-api-key': import.meta.env.VITE_FRONTEND_API_KEY
           }
         }
       );
@@ -104,7 +104,7 @@ const AdminContentRequests: React.FC = () => {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
-            'x-api-key': import.meta.env.VITE_API_KEY
+            'x-api-key': import.meta.env.VITE_FRONTEND_API_KEY
           },
           body: JSON.stringify({ status, completedLink, rejectionReason })
         }
@@ -136,7 +136,7 @@ const AdminContentRequests: React.FC = () => {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,
-            'x-api-key': import.meta.env.VITE_API_KEY
+            'x-api-key': import.meta.env.VITE_FRONTEND_API_KEY
           }
         }
       );

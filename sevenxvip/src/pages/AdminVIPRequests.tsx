@@ -68,21 +68,19 @@ const AdminVIPRequests = () => {
     reason: ''
   });
 
+  
+
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/');
-      return;
-    }
     fetchRequests();
     fetchStats();
   }, [isAuthenticated, navigate, filter, tierFilter]);
 
   const fetchRequests = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const token = localStorage.getItem('Token');
+      const apiKey = import.meta.env.VITE_FRONTEND_API_KEY;
 
-      let url = `${import.meta.env.VITE_API_URL}/vip-requests/admin/all?limit=100`;
+      let url = `${import.meta.env.VITE_BACKEND_URL}/vip-requests/admin/all?limit=100`;
       if (filter !== 'all') url += `&status=${filter}`;
       if (tierFilter !== 'all') url += `&tier=${tierFilter}`;
 
@@ -109,11 +107,11 @@ const AdminVIPRequests = () => {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const token = localStorage.getItem('Token');
+      const apiKey = import.meta.env.VITE_FRONTEND_API_KEY;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/vip-requests/admin/stats`,
+        `${import.meta.env.VITE_BACKEND_URL}/vip-requests/admin/stats`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -140,11 +138,11 @@ const AdminVIPRequests = () => {
     setProcessingId(approvalModal.requestId);
 
     try {
-      const token = localStorage.getItem('token');
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const token = localStorage.getItem('Token');
+      const apiKey = import.meta.env.VITE_FRONTEND_API_KEY;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/vip-requests/admin/approve/${approvalModal.requestId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/vip-requests/admin/approve/${approvalModal.requestId}`,
         {
           method: 'PUT',
           headers: {
@@ -178,11 +176,11 @@ const AdminVIPRequests = () => {
     setProcessingId(rejectionModal.requestId);
 
     try {
-      const token = localStorage.getItem('token');
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const token = localStorage.getItem('Token');
+      const apiKey = import.meta.env.VITE_FRONTEND_API_KEY;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/vip-requests/admin/reject/${rejectionModal.requestId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/vip-requests/admin/reject/${rejectionModal.requestId}`,
         {
           method: 'PUT',
           headers: {
@@ -229,20 +227,11 @@ const AdminVIPRequests = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        <HeaderLogged />
-        <div className="flex items-center justify-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
-      <HeaderLogged />
+      
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">

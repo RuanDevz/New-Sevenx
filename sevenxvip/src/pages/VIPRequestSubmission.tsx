@@ -51,11 +51,11 @@ const VIPRequestSubmission = () => {
 
   const fetchRequestLimits = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const token = localStorage.getItem('Token');
+      const apiKey = import.meta.env.VITE_FRONTEND_API_KEY;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/vip-requests/my-limits`,
+        `${import.meta.env.VITE_BACKEND_URL}/vip-requests/my-limits`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -95,11 +95,11 @@ const VIPRequestSubmission = () => {
     setSubmitting(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const apiKey = import.meta.env.VITE_API_KEY;
+      const token = localStorage.getItem('Token');
+      const apiKey = import.meta.env.VITE_FRONTEND_API_KEY;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/vip-requests/create`,
+        `${import.meta.env.VITE_BACKEND_URL}/vip-requests/create`,
         {
           method: 'POST',
           headers: {
