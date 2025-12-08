@@ -42,6 +42,9 @@ import VIPBannedContentDetails from "./pages/VIPBannedContentDetails";
 import VIPUnknownContentDetails from "./pages/VIPUnknownContentDetails";
 import VIPHeader from "./components/VIP/VIPHeader";
 import RecommendContent from "./pages/RecommendContent";
+import VIPRequestSubmission from "./pages/VIPRequestSubmission";
+import VIPRequestHistory from "./pages/VIPRequestHistory";
+import AdminVIPRequests from "./pages/AdminVIPRequests";
 
 const App = () => {
   const [hasPermission, setHasPermission] = useState({ vip: false, admin: false });
@@ -198,6 +201,20 @@ const App = () => {
             />
 
             <Route
+              path="/vip-requests/submit"
+              element={
+                hasPermission.vip ? <VIPRequestSubmission /> : <AccessDenied message="You are not a VIP to access this page." />
+              }
+            />
+
+            <Route
+              path="/vip-requests/history"
+              element={
+                hasPermission.vip ? <VIPRequestHistory /> : <AccessDenied message="You are not a VIP to access this page." />
+              }
+            />
+
+            <Route
               path="/admin/settings"
               element={
                 hasPermission.admin ? <AdminPainel /> : <AccessDenied message="You are not an administrator to access this page." />
@@ -219,6 +236,12 @@ const App = () => {
               path="/admin/content-requests"
               element={
                 hasPermission.admin ? <AdminContentRequests /> : <AccessDenied message="You are not an administrator to access this page." />
+              }
+            />
+            <Route
+              path="/admin/vip-requests"
+              element={
+                hasPermission.admin ? <AdminVIPRequests /> : <AccessDenied message="You are not an administrator to access this page." />
               }
             />
             <Route

@@ -134,6 +134,7 @@ const HeaderLogged: React.FC = () => {
           { name: "Admin Panel", path: "/admin/settings", icon: "fa-solid fa-shield-halved" },
           { name: "Statistics", path: "/admin/stats", icon: "fa-solid fa-chart-line" },
           { name: "Requests", path: "/admin/requests", icon: "fa-solid fa-clipboard-list" },
+          { name: "VIP Requests", path: "/admin/vip-requests", icon: "fa-solid fa-star" },
         ]
       : [];
 

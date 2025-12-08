@@ -68,6 +68,7 @@ const VipWesternRouter = require('./routes/VipWesternContent');
 const VipBannedRouter = require('./routes/VipBannedContent');
 const VipUnknownRouter = require('./routes/VipUnknownContent');
 const universalSearchRouter = require('./routes/UniversalSearch');
+const vipRequestsRouter = require('./routes/vipRequests');
 
 
 app.use('/auth', userRouter);
@@ -94,6 +95,7 @@ app.use('/vip-westerncontent', checkApiKey, VipWesternRouter);
 app.use('/vip-bannedcontent', checkApiKey, VipBannedRouter);
 app.use('/vip-unknowncontent', checkApiKey, VipUnknownRouter);
 app.use('/universal-search', checkApiKey, universalSearchRouter);
+app.use('/vip-requests', checkApiKey, vipRequestsRouter);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, 
