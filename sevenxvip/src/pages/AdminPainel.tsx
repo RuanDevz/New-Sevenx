@@ -20,6 +20,7 @@ import {
   HelpCircle,
   ToggleLeft,
   ToggleRight,
+  Settings,
 } from "lucide-react";
 
 import { LinkItem } from "../utils/index";
@@ -42,6 +43,9 @@ const AdminPanel: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<keyof typeof tabConfig>("asian");
   const [links, setLinks] = useState<LinkItem[]>([]);
+    const [linkvertiseAccount, setLinkvertiseAccount] = useState<string>('518238');
+      const [isUpdatingAccount, setIsUpdatingAccount] = useState(false);
+
   const [newLink, setNewLink] = useState<LinkItem>({
       id: 0,
       name: "",
@@ -111,6 +115,55 @@ const AdminPanel: React.FC = () => {
       color: "gray",
       gradient: "from-gray-500 to-gray-600",
     },
+  };
+
+  useEffect(() => {
+    fetchLinkvertiseConfig();
+  }, []);
+
+  // Busca a configuração global da conta do Linkvertise
+  const fetchLinkvertiseConfig = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/linkvertise-config`, {
+        headers: {
+          'x-api-key': `${import.meta.env.VITE_FRONTEND_API_KEY}`,
+        },
+      });
+      
+      if (response.data && response.data.activeAccount) {
+        setLinkvertiseAccount(response.data.activeAccount);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar configuração do Linkvertise:', error);
+      // Fallback para account1 se não conseguir buscar
+      setLinkvertiseAccount('518238');
+    }
+  };
+
+  // Salva a configuração global da conta do Linkvertise
+  const handleLinkvertiseAccountChange = async (account: string) => {
+    setIsUpdatingAccount(true);
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/linkvertise-config`,
+        { activeAccount: account },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'x-api-key': `${import.meta.env.VITE_FRONTEND_API_KEY}`,
+            'x-admin-key': `${import.meta.env.VITE_ADMIN_KEY}`
+          }
+        }
+      );
+      
+      setLinkvertiseAccount(account);
+      setError(null);
+    } catch (error) {
+      setError('Erro ao atualizar configuração do Linkvertise');
+      console.error('Erro ao atualizar configuração:', error);
+    } finally {
+      setIsUpdatingAccount(false);
+    }
   };
 
   useEffect(() => {
@@ -355,6 +408,140 @@ const AdminPanel: React.FC = () => {
             </motion.button>
           </div>
         </div>
+
+               <div
+  className={`backdrop-blur-sm rounded-xl p-6 mb-6 border ${
+    isDark
+      ? "bg-gray-800/50 border-gray-700"
+      : "bg-white/60 border-gray-200 shadow-sm"
+  }`}
+>
+  <div className="flex items-center gap-3 mb-4">
+    <Settings
+      className={`w-6 h-6 ${
+        isDark ? "text-blue-400" : "text-blue-600"
+      }`}
+    />
+    <h2
+      className={`text-xl font-semibold ${
+        isDark ? "text-white" : "text-gray-900"
+      }`}
+    >
+      Configurações Globais do Linkvertise
+    </h2>
+  </div>
+
+  <div
+    className={`flex items-center justify-between p-4 rounded-lg border ${
+      isDark
+        ? "bg-gray-700/30 border-gray-600"
+        : "bg-gray-100/60 border-gray-300"
+    }`}
+  >
+    {/* Informações */}
+    <div className="flex flex-col">
+      <span
+        className={`font-medium ${
+          isDark ? "text-white" : "text-gray-900"
+        }`}
+      >
+        Conta Ativa Global
+      </span>
+
+      <span
+        className={`text-sm ${
+          isDark ? "text-gray-400" : "text-gray-600"
+        }`}
+      >
+        {linkvertiseAccount === "518238"
+          ? "Conta 1 (ID: 518238)"
+          : "Conta 2 (ID: 1282863)"}
+      </span>
+    </div>
+
+    {/* Botões de troca */}
+    <div className="flex items-center gap-4 relative">
+
+      {isUpdatingAccount && (
+        <div
+          className={`absolute inset-0 rounded-lg flex items-center justify-center ${
+            isDark ? "bg-gray-800/60" : "bg-white/60"
+          }`}
+        >
+          <Loader2
+            className={`w-5 h-5 animate-spin ${
+              isDark ? "text-blue-400" : "text-blue-600"
+            }`}
+          />
+        </div>
+      )}
+
+      {/* Conta 1 */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => handleLinkvertiseAccountChange("518238")}
+        disabled={isUpdatingAccount}
+        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+          linkvertiseAccount === "518238"
+            ? "bg-blue-600 text-white shadow-lg"
+            : isDark
+            ? "bg-gray-600 text-gray-300 hover:bg-gray-500"
+            : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+        } disabled:opacity-50`}
+      >
+        Conta 1
+      </motion.button>
+
+      {/* Toggle */}
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() =>
+          handleLinkvertiseAccountChange(
+            linkvertiseAccount === "518238"
+              ? "1282863"
+              : "518238"
+          )
+        }
+        style={{ pointerEvents: isUpdatingAccount ? "none" : "auto" }}
+        className="cursor-pointer p-1"
+      >
+        {linkvertiseAccount === "518238" ? (
+          <ToggleLeft
+            className={`w-8 h-8 ${
+              isDark ? "text-blue-400" : "text-blue-600"
+            }`}
+          />
+        ) : (
+          <ToggleRight
+            className={`w-8 h-8 ${
+              isDark ? "text-green-400" : "text-green-600"
+            }`}
+          />
+        )}
+      </motion.div>
+
+      {/* Conta 2 */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => handleLinkvertiseAccountChange("1282863")}
+        disabled={isUpdatingAccount}
+        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+          linkvertiseAccount === "1282863"
+            ? "bg-green-600 text-white shadow-lg"
+            : isDark
+            ? "bg-gray-600 text-gray-300 hover:bg-gray-500"
+            : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+        } disabled:opacity-50`}
+      >
+        Conta 2
+      </motion.button>
+    </div>
+  </div>
+</div>
+
 
         {error && (
           <motion.div

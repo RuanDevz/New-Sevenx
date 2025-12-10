@@ -66,8 +66,8 @@ const VIPHeader: React.FC = () => {
       { name: "VIP Western", path: "/vip-western", icon: "fa-solid fa-crown" },
       { name: "VIP Banned", path: "/vip-banned", icon: "fa-solid fa-ban" },
       { name: "VIP Unknown", path: "/vip-unknown", icon: "fa-regular fa-circle-question" },
-      { name: "Submit Request", path: "/vip-requests/submit", icon: "fa-solid fa-paper-plane" },
-      { name: "Request History", path: "/vip-requests/history", icon: "fa-solid fa-clock-rotate-left" },
+      // { name: "Submit Request", path: "/vip-requests/submit", icon: "fa-solid fa-paper-plane" },
+      // { name: "Request History", path: "/vip-requests/history", icon: "fa-solid fa-clock-rotate-left" },
     ];
 
     const adminItems: MenuItem[] = isAdmin
