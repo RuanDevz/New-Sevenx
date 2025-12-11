@@ -422,7 +422,7 @@ const Plans: React.FC = () => {
       </ul>
 
       {/* CTA Button */}
-      <button className="relative w-full py-3 rounded-xl font-bold text-base transition-all duration-300 overflow-hidden group bg-gradient-to-r from-red-600 via-red-500 to-red-600 hover:from-red-700 hover:via-red-600 hover:to-red-700 text-white shadow-2xl hover:shadow-red-500/50 hover:scale-105 border-2 border-white">
+      <button onClick={() => handleAccessClick("lifetime")} className="relative w-full py-3 rounded-xl font-bold text-base transition-all duration-300 overflow-hidden group bg-gradient-to-r from-red-600 via-red-500 to-red-600 hover:from-red-700 hover:via-red-600 hover:to-red-700 text-white shadow-2xl hover:shadow-red-500/50 hover:scale-105 border-2 border-white">
         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 group-hover:animate-pulse"></span>
         <span className="relative">🎄 Claim Lifetime Access</span>
       </button>
