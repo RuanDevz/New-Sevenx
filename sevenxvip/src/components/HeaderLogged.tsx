@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../contexts/ThemeContext";
 import ThemeToggle from "./ThemeToggle";
 import BlackFridayBanner from "./BlackFridayBanner";
+import ChristmasBanner from "./ChristmasBanner";
 
 type MenuItem = {
   name: string;
@@ -160,7 +161,7 @@ const HeaderLogged: React.FC = () => {
           : "bg-gradient-to-r from-white via-gray-50 to-white border-gray-200/50"
       }`}
     >
-      {/* <BlackFridayBanner/> */}
+      <ChristmasBanner/>
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
           {/* Logo Section */}
