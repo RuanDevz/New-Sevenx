@@ -49,9 +49,14 @@ const asianContentDetails = () => {
   const [linkvertiseAccount, setLinkvertiseAccount] = useState<string>("518238");
   const [benefitsOpen, setBenefitsOpen] = useState<boolean>(false);
   const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [previewLoaded, setPreviewLoaded] = useState(false);
+const [previewError, setPreviewError] = useState(false);
 
 
-  
+  useEffect(() => {
+  setPreviewLoaded(false);
+  setPreviewError(false);
+}, [content?.preview]);
 
    useEffect(() => {
      const fetchLinkvertiseConfig = async () => {
@@ -80,7 +85,7 @@ const asianContentDetails = () => {
         whitelist: ["mega.nz", "pixeldrain.com", "gofile.io"],
       });
     }
-  }, [content, linkvertiseAccount]);
+  }, [content, linkvertiseAccount, content?.preview]);
 
   function decodeModifiedBase64(encodedStr: string): any {
     const fixedBase64 = encodedStr.slice(0, 2) + encodedStr.slice(3);
@@ -317,6 +322,62 @@ const asianContentDetails = () => {
             </div>
           </div>
 
+{content?.preview &&
+ !previewError &&
+ content.link && (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.55 }}
+    className="px-6 pt-6"
+  >
+    <a
+      href={content.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`relative block rounded-xl overflow-hidden border shadow-2xl cursor-pointer group ${
+        isDark
+          ? "border-purple-500/30 bg-gray-900/40"
+          : "border-purple-400/30 bg-white/40"
+      }`}
+    >
+      {/* Preview Image */}
+      <img
+        src={content.preview}
+        alt={`${content.name} preview`}
+        loading="eager"
+        onLoad={() => setPreviewLoaded(true)}
+        onError={() => setPreviewError(true)}
+        className={`w-full max-h-[420px] object-cover transition-all duration-300 ${
+          previewLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+
+      {/* Overlay (só aparece depois do load) */}
+      {previewLoaded && (
+        <>
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-all duration-300" />
+
+          {/* Play Button */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+              <svg
+                viewBox="0 0 24 24"
+                fill="white"
+                className="w-8 h-8 sm:w-10 sm:h-10 ml-1"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        </>
+      )}
+    </a>
+  </motion.div>
+)}
+
+
+
           {/* Download Section */}
           <div className="p-6">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
@@ -332,6 +393,8 @@ const asianContentDetails = () => {
     LINKMV3: content.linkMV3, // Pixeldrain (admaven)
   }}
 />
+
+
 
               </div>
             </motion.div>

@@ -4,16 +4,13 @@ import DownloadButton from './DownloadButton';
 import { motion } from 'framer-motion';
 
 interface DownloadOptionsProps {
-  // O usuário sempre preencherá apenas 3 destes 6 campos.
   primaryLinks: {
-    // Vertise
-    linkG?: string;       // MEGA
-    linkP?: string;       // MEGA 2
-    pixeldrain?: string;  // Pixeldrain
-    // AdMaven
-    LINKMV1?: string;     // MEGA
-    LINKMV2?: string;     // MEGA 2
-    LINKMV3?: string;     // Pixeldrain
+    linkG?: string;
+    linkP?: string;
+    pixeldrain?: string;
+    LINKMV1?: string;
+    LINKMV2?: string;
+    LINKMV3?: string;
   };
 }
 
@@ -21,86 +18,171 @@ const DownloadOptions: React.FC<DownloadOptionsProps> = ({ primaryLinks }) => {
   const location = useLocation();
 
   const getTheme = () => {
+    if (location.pathname.includes('/vip')) return 'vip';
     if (location.pathname.includes('/western')) return 'western';
     if (location.pathname.includes('/asian')) return 'asian';
-    if (location.pathname.includes('/vip')) return 'vip';
     if (location.pathname.includes('/banned')) return 'banned';
     if (location.pathname.includes('/unknown')) return 'unknown';
     return 'asian';
   };
 
   const theme = getTheme();
+  const isVip = theme === 'vip';
 
-  const getThemeColors = () => {
-    switch (theme) {
-      case 'western':
-        return {
-          primary: 'from-orange-500 to-orange-600',
-          hover: 'hover:from-orange-600 hover:to-orange-700',
-          shadow: 'hover:shadow-orange-500/20'
-        };
-      case 'vip':
-        return {
-          primary: 'from-yellow-500 to-yellow-600',
-          hover: 'hover:from-yellow-600 hover:to-yellow-700',
-          shadow: 'hover:shadow-yellow-500/20'
-        };
-      case 'banned':
-        return {
-          primary: 'from-red-500 to-red-600',
-          hover: 'hover:from-red-600 hover:to-red-700',
-          shadow: 'hover:shadow-red-500/20'
-        };
-      case 'unknown':
-        return {
-          primary: 'from-gray-500 to-gray-600',
-          hover: 'hover:from-gray-600 hover:to-gray-700',
-          shadow: 'hover:shadow-gray-500/20'
-        };
-      case 'asian':
-      default:
-        return {
-          primary: 'from-purple-500 to-purple-600',
-          hover: 'hover:from-purple-600 hover:to-purple-700',
-          shadow: 'hover:shadow-purple-500/20'
-        };
-    }
+  const themeConfig = {
+    asian: {
+      button: {
+        primary: 'from-purple-500 to-purple-600',
+        hover: 'hover:from-purple-600 hover:to-purple-700',
+        shadow: 'hover:shadow-purple-500/20',
+      },
+      title: 'text-purple-400',
+    },
+    western: {
+      button: {
+        primary: 'from-orange-500 to-orange-600',
+        hover: 'hover:from-orange-600 hover:to-orange-700',
+        shadow: 'hover:shadow-orange-500/20',
+      },
+      title: 'text-orange-400',
+    },
+    vip: {
+      button: {
+        primary: 'from-yellow-500 to-yellow-600',
+        hover: 'hover:from-yellow-600 hover:to-yellow-700',
+        shadow: 'hover:shadow-yellow-500/20',
+      },
+      title: 'text-yellow-400',
+    },
+    banned: {
+      button: {
+        primary: 'from-red-500 to-red-600',
+        hover: 'hover:from-red-600 hover:to-red-700',
+        shadow: 'hover:shadow-red-500/20',
+      },
+      title: 'text-red-400',
+    },
+    unknown: {
+      button: {
+        primary: 'from-gray-500 to-gray-600',
+        hover: 'hover:from-gray-600 hover:to-gray-700',
+        shadow: 'hover:shadow-gray-500/20',
+      },
+      title: 'text-gray-400',
+    },
   };
 
-  const colors = getThemeColors();
+  const colors = themeConfig[theme];
 
-  // Normalização: mesmo rótulo, fontes distintas. Prioriza Vertise; na ausência, usa AdMaven.
-  const sources: Record<string, (string | undefined)[]> = {
-    'MEGA':      [primaryLinks.linkG, primaryLinks.LINKMV1],
-    'MEGA 2':    [primaryLinks.linkP, primaryLinks.LINKMV3],
-    'Pixeldrain':[primaryLinks.pixeldrain, primaryLinks.LINKMV2],
-  };
+  /* ================= VIP ================= */
+  if (isVip) {
+    const vipLinks = [
+      { label: 'MEGA 1', url: primaryLinks.linkG },
+      { label: 'MEGA 2', url: primaryLinks.linkP },
+      { label: 'MEGA 3', url: primaryLinks.pixeldrain },
+    ].filter(l => l.url);
 
-  const availableOptions = Object.entries(sources)
-    .map(([label, candidates]) => ({ name: label, url: candidates.find(Boolean) }))
-    .filter(opt => Boolean(opt.url));
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {vipLinks.map((option, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.08 }}
+            >
+              <DownloadButton
+                url={option.url}
+                label={option.label}
+                bgColor={colors.button.primary}
+                hoverColor={colors.button.hover}
+                shadowColor={colors.button.shadow}
+                textColor="text-white"
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  /* ================= NORMAL ================= */
+
+  const vertiseLinks = [
+    { label: 'MEGA 1', url: primaryLinks.linkG },
+    { label: 'MEGA 2', url: primaryLinks.linkP },
+    { label: 'MEGA 3', url: primaryLinks.pixeldrain },
+  ].filter(l => l.url);
+
+  const admavenLinks = [
+    { label: 'MEGA 1', url: primaryLinks.LINKMV1 },
+    { label: 'MEGA 2', url: primaryLinks.LINKMV2 },
+    { label: 'MEGA 3', url: primaryLinks.LINKMV3 },
+  ].filter(l => l.url);
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {availableOptions.map((option, index) => (
-          <motion.div
-            key={`${option.name}-${index}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
+    <div className="max-w-2xl mx-auto space-y-6">
+
+      {vertiseLinks.length > 0 && (
+        <div>
+          <h3
+            className={`mb-3 text-xs sm:text-sm font-bold uppercase tracking-wide ${colors.title}`}
           >
-            <DownloadButton
-              url={option.url as string}
-              label={option.name}
-              bgColor={colors.primary}
-              hoverColor={colors.hover}
-              shadowColor={colors.shadow}
-              textColor="text-white"
-            />
-          </motion.div>
-        ))}
-      </div>
+            Option 1 · Linkvertise
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            {vertiseLinks.map((option, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.08 }}
+              >
+                <DownloadButton
+                  url={option.url}
+                  label={option.label}
+                  bgColor={colors.button.primary}
+                  hoverColor={colors.button.hover}
+                  shadowColor={colors.button.shadow}
+                  textColor="text-white"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {admavenLinks.length > 0 && (
+        <div>
+          <h3
+            className={`mb-3 text-xs sm:text-sm font-bold uppercase tracking-wide ${colors.title}`}
+          >
+            Option 2 · Admaven
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            {admavenLinks.map((option, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.08 }}
+              >
+                <DownloadButton
+                  url={option.url}
+                  label={option.label}
+                  bgColor={colors.button.primary}
+                  hoverColor={colors.button.hover}
+                  shadowColor={colors.button.shadow}
+                  textColor="text-white"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

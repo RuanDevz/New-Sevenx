@@ -7,6 +7,7 @@ import { Crown, Sparkles, X } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
 import { useTheme } from "../../contexts/ThemeContext";
 import BlackFridayBanner from "../BlackFridayBanner";
+import ChristmasBanner from "../ChristmasBanner";
 
 type MenuItem = {
   name: string;
@@ -98,7 +99,7 @@ const VIPHeader: React.FC = () => {
           : "bg-gradient-to-r from-white via-yellow-100/20 to-white border-yellow-400/40"
       }`}
     >
-
+      <ChristmasBanner/>
       {/* <r/> */}
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">

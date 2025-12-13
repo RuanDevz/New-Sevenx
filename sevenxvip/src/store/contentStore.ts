@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+/* =======================
+   TIPOS EXISTENTES
+======================= */
+
 type LinkItem = {
   id: string;
   name: string;
@@ -36,6 +40,21 @@ type ContentCache = {
   timestamp: number;
 };
 
+/* =======================
+   PREVIEW CACHE (NOVO)
+======================= */
+
+type PreviewItem = {
+  image: string;
+  name: string;
+};
+
+type PreviewCache = Record<string, PreviewItem>;
+
+/* =======================
+   STORE
+======================= */
+
 type ContentStore = {
   // Cache por tipo de conteúdo
   caches: {
@@ -49,14 +68,29 @@ type ContentStore = {
     vipUnknown: ContentCache | null;
   };
 
-  // Ações para gerenciar o cache
+  // Preview cache (por slug)
+  previewCache: PreviewCache;
+
+  // Cache actions
   setCache: (contentType: keyof ContentStore['caches'], data: ContentCache) => void;
   getCache: (contentType: keyof ContentStore['caches']) => ContentCache | null;
   clearCache: (contentType: keyof ContentStore['caches']) => void;
   clearAllCaches: () => void;
   isCacheValid: (contentType: keyof ContentStore['caches'], filters: FilterState) => boolean;
-  appendToCache: (contentType: keyof ContentStore['caches'], newLinks: LinkItem[], newPage: number) => void;
+  appendToCache: (
+    contentType: keyof ContentStore['caches'],
+    newLinks: LinkItem[],
+    newPage: number
+  ) => void;
+
+  // Preview actions (NOVO)
+  setPreview: (slug: string, image: string, name: string) => void;
+  getPreview: (slug: string) => PreviewItem | null;
 };
+
+/* =======================
+   CONFIG
+======================= */
 
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
@@ -68,6 +102,10 @@ const areFiltersEqual = (f1: FilterState, f2: FilterState): boolean => {
     f1.dateFilter === f2.dateFilter
   );
 };
+
+/* =======================
+   STORE IMPLEMENTATION
+======================= */
 
 export const useContentStore = create<ContentStore>()(
   persist(
@@ -83,6 +121,10 @@ export const useContentStore = create<ContentStore>()(
         vipUnknown: null,
       },
 
+      previewCache: {},
+
+      /* ========= CACHE ========= */
+
       setCache: (contentType, data) => {
         set((state) => ({
           caches: {
@@ -96,7 +138,6 @@ export const useContentStore = create<ContentStore>()(
         const cache = get().caches[contentType];
         if (!cache) return null;
 
-        // Verifica se o cache expirou
         const now = Date.now();
         if (now - cache.timestamp > CACHE_DURATION) {
           get().clearCache(contentType);
@@ -153,10 +194,28 @@ export const useContentStore = create<ContentStore>()(
           },
         }));
       },
+
+      /* ========= PREVIEW ========= */
+
+      setPreview: (slug, image, name) => {
+        set((state) => ({
+          previewCache: {
+            ...state.previewCache,
+            [slug]: { image, name },
+          },
+        }));
+      },
+
+      getPreview: (slug) => {
+        return get().previewCache[slug] ?? null;
+      },
     }),
     {
       name: 'content-cache-storage',
-      partialize: (state) => ({ caches: state.caches }),
+      partialize: (state) => ({
+        caches: state.caches,
+        previewCache: state.previewCache, // mantém preview entre páginas
+      }),
     }
   )
 );
