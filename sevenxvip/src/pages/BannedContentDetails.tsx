@@ -10,13 +10,25 @@ import {
   Crown,
   ChevronDown,
   AlertTriangle,
+  ShieldCheck,
+  Zap,
+  Ban,
+  BadgeCheck,
+  DoorOpen,
+  Archive
 } from "lucide-react";
+
 import DownloadOptions from "../components/DownloadOptions";
 import { linkvertise } from "../components/Linkvertise";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import LoadingBanned from "../components/Loaders/LoadingBanned";
 import { useTheme } from "../contexts/ThemeContext";
+import visa from "../assets/visa.svg";
+import mastercard from "../assets/mastercard.svg";
+import applepay from "../assets/applepay.svg";
+import googlepay from "../assets/googlepay.svg";
+
 
 type ContentItem = {
   id: number;
@@ -159,9 +171,16 @@ useEffect(() => {
           <p className={`mb-6 ${
             isDark ? 'text-gray-300' : 'text-gray-600'
           }`}>{error}</p>
-          <Link to="/banned" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-semibold transition-all duration-300">
+          <Link
+            to="/asian"
+            className={`inline-flex items-center gap-2 mb-3 text-xs font-medium transition-colors ${
+              isDark
+                ? "text-gray-400 hover:text-gray-100"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
             <ArrowLeft className="w-4 h-4" />
-            Back to banned content
+            Back to Asian Content
           </Link>
         </motion.div>
       </div>
@@ -295,59 +314,144 @@ useEffect(() => {
             </div>
           </div>
 
-         {content?.preview &&
- !previewError &&
- content.link && (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.55 }}
-    className="px-6 pt-6"
-  >
-    <a
-      href={content.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`relative block rounded-xl overflow-hidden border shadow-2xl cursor-pointer group ${
-        isDark
-          ? "border-purple-500/30 bg-gray-900/40"
-          : "border-purple-400/30 bg-white/40"
-      }`}
-    >
-      {/* Preview Image */}
-      <img
-        src={content.preview}
-        alt={`${content.name} preview`}
-        loading="eager"
-        onLoad={() => setPreviewLoaded(true)}
-        onError={() => setPreviewError(true)}
-        className={`w-full max-h-[420px] object-cover transition-all duration-300 ${
-          previewLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-
-      {/* Overlay (só aparece depois do load) */}
-      {previewLoaded && (
-        <>
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-all duration-300" />
-
-          {/* Play Button */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
-              <svg
-                viewBox="0 0 24 24"
-                fill="white"
-                className="w-8 h-8 sm:w-10 sm:h-10 ml-1"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
+        {content.preview && !previewError && (
+          <div className="p-3">
+            <a
+              href={content.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group relative block rounded-md overflow-hidden border ${
+                isDark ? "border-white/10" : "border-black/10"
+              }`}
+            >
+              {/* Preview Image */}
+              <img
+                src={content.preview}
+                onLoad={() => setPreviewLoaded(true)}
+                onError={() => setPreviewError(true)}
+                className="w-full max-h-[300px] object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+        
+              {previewLoaded && (
+                <>
+                  {/* Overlay */}
+                  <div
+                    className={`absolute inset-0 transition-all duration-700 ${
+                      isDark
+                        ? "bg-black/10 group-hover:bg-black/40"
+                        : "bg-white/0 group-hover:bg-black/30"
+                    }`}
+                  />
+        
+                  {/* Play Button with Slow Waves */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative flex items-center justify-center">
+                      {/* Wave 1 */}
+                      <span className="absolute w-24 h-24 rounded-full bg-red-500/30 animate-[ping_2.5s_ease-out_infinite]" />
+                      
+                      {/* Wave 2 */}
+                      <span className="absolute w-32 h-32 rounded-full bg-red-500/20 animate-[ping_3.2s_ease-out_infinite]" />
+        
+                      {/* Core Button */}
+                      <div
+                        className="
+                          relative z-10
+                          w-16 h-16
+                          rounded-full
+                          bg-red-600
+                          flex items-center justify-center
+                          shadow-[0_0_35px_rgba(168,85,247,0.9)]
+                          transition-transform duration-300
+                          group-hover:scale-110
+                        "
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="white"
+                          className="w-8 h-8 ml-1"
+                        >
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </a>
+        
+            {/* VERIFIED SAFE */}
+            <div
+              className={`mt-2 flex items-center justify-center gap-1 text-[11px] font-semibold ${
+                isDark ? "text-green-400" : "text-green-600"
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4" />
+              Verified & Safe Download
             </div>
           </div>
-        </>
-      )}
-    </a>
-  </motion.div>
-)}
+        )}
+
+ <div className="px-3">
+              <div
+                className={`mt-3 rounded-lg p-3 text-center border ${
+                  isDark
+                    ? "border-yellow-400/40 bg-yellow-400/5"
+                    : "border-yellow-400 bg-yellow-50"
+                }`}
+              >
+                <h3
+                  className={`flex items-center justify-center gap-2 text-base font-bold mb-1 ${
+                    isDark ? "text-yellow-400" : "text-yellow-600"
+                  }`}
+                >
+                  <Crown className="w-4 h-4" />
+                  UNLOCK FULL SITE ACCESS
+                </h3>
+
+                <p
+                  className={`text-[11px] mb-2 ${
+                    isDark ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  Get instant access to this video &{" "}
+                  <b>20000+ Exclusive Folders</b>
+                </p>
+
+                {/* BENEFITS */}
+                <div className="flex flex-wrap justify-center gap-2 mb-3 text-[10px]">
+                  <Benefit icon={Zap} label="Max Speed" dark={isDark} />
+                  <Benefit icon={Ban} label="No Ads" dark={isDark} />
+                  <Benefit icon={DoorOpen} label="VIP Room" dark={isDark} />
+                  <Benefit icon={BadgeCheck} label="Exclusive Badge" dark={isDark} />
+                  <Benefit icon={Archive} label="All Archives" dark={isDark} />
+                </div>
+
+                <Link
+                  to="/plans"
+                  className="block w-full max-w-xs mx-auto px-3 py-1.5 rounded-md bg-yellow-500 hover:bg-yellow-600 text-black font-bold transition text-sm"
+                >
+                  UPGRADE TO VIP ACCESS NOW →
+                </Link>
+
+                {/* PAYMENTS */}
+                <div className="mt-3 flex flex-wrap justify-center gap-4">
+                  <img src={visa} alt="Visa" className="w-8 opacity-80" />
+                  <img src={mastercard} alt="Mastercard" className="w-8 opacity-80" />
+                  <img src={applepay} alt="ApplePay" className="w-8 opacity-80" />
+                  <img src={googlepay} alt="GooglePay" className="w-8 opacity-80" />
+                </div>
+              </div>
+            </div>
+
+            {/* FREE */}
+            <p
+              className={`text-center text-[11px] mt-3 ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
+              Or continue with limited free servers (Slow speed and Unskippable
+              ADS):
+            </p>
 
 
           {/* Download Section */}
@@ -437,5 +541,26 @@ useEffect(() => {
     </div>
   );
 };
+
+const Benefit = ({
+  icon: Icon,
+  label,
+  dark,
+}: {
+  icon: any;
+  label: string;
+  dark: boolean;
+}) => (
+  <span
+    className={`flex items-center gap-1 px-2 py-0.5 rounded-full font-semibold ${
+      dark
+        ? "bg-yellow-400/20 text-yellow-300"
+        : "bg-yellow-200 text-yellow-800"
+    }`}
+  >
+    <Icon className="w-3.5 h-3.5" />
+    {label}
+  </span>
+);
 
 export default BannedContentDetails;
