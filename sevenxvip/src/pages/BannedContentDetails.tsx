@@ -66,6 +66,14 @@ useEffect(() => {
   setPreviewError(false);
 }, [content?.preview]);
 
+useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth", // pode remover se quiser instantâneo
+  });
+}, [slug]);
+
   useEffect(() => {
     const fetchLinkvertiseConfig = async () => {
       try {
