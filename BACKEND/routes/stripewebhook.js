@@ -190,7 +190,7 @@ router.post(
           }
 
           // E-mail de confirmação
-          await sendConfirmationEmail(customerEmail);
+          // await sendConfirmationEmail(customerEmail);
           return res.status(200).send({ received: true });
         } catch (err) {
           console.error('Erro ao tratar checkout.session.completed:', err);

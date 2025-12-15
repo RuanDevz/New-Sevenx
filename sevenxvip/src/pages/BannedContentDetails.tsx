@@ -128,14 +128,14 @@ const BannedContentDetails = () => {
           <div
             className={`rounded-lg shadow-md overflow-hidden transition-colors border ${
               isDark
-                ? "bg-gray-800 border-red-500/30"
-                : "bg-white border-red-300"
+                ? "bg-gray-800 border-slate-500/30"
+                : "bg-white border-slate-300"
             }`}
           >
             {/* HEADER */}
             <div
               className={`px-3 py-3 border-b ${
-                isDark ? "border-red-700" : "border-red-200"
+                isDark ? "border-slate-700" : "border-slate-200"
               }`}
             >
               <h1
