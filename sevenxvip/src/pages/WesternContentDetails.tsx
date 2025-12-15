@@ -151,19 +151,41 @@ const WesternContentDetails = () => {
 
                   {previewLoaded && (
                     <>
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition" />
+                     {/* Play Button with Slow Waves */}
+<div className="absolute inset-0 flex items-center justify-center">
+  <div className="relative flex items-center justify-center">
+    
+    {/* Wave 1 */}
+    <span className="absolute w-24 h-24 rounded-full bg-orange-500/30 animate-[ping_2.5s_ease-out_infinite]" />
 
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="relative">
-                          <span className="absolute w-24 h-24 bg-orange-500/30 rounded-full animate-[ping_2.5s_ease-out_infinite]" />
-                          <span className="absolute w-32 h-32 bg-orange-500/20 rounded-full animate-[ping_3.2s_ease-out_infinite]" />
-                          <div className="relative z-10 w-16 h-16 rounded-full bg-orange-500 flex items-center justify-center shadow-[0_0_35px_rgba(249,115,22,0.9)]">
-                            <svg viewBox="0 0 24 24" fill="white" className="w-8 h-8 ml-1">
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
+    {/* Wave 2 */}
+    <span className="absolute w-32 h-32 rounded-full bg-orange-500/20 animate-[ping_3.2s_ease-out_infinite]" />
+
+    {/* Core Button */}
+    <div
+      className="
+        relative z-10
+        w-16 h-16
+        rounded-full
+        bg-orange-500
+        flex items-center justify-center
+        shadow-[0_0_35px_rgba(249,115,22,0.9)]
+        transition-transform duration-300
+        group-hover:scale-110
+      "
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="white"
+        className="w-8 h-8 ml-1"
+      >
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </div>
+
+  </div>
+</div>
+
                     </>
                   )}
                 </a>

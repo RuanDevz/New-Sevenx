@@ -182,7 +182,7 @@ const AsianContentDetails = () => {
           : "bg-gray-100 text-gray-700"
       }`}
     >
-      Asian
+      {content.category}
     </span>
   </div>
 </div>
