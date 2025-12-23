@@ -39,8 +39,8 @@ module.exports = function checkApiKey(req, res, next) {
     return next();
   }
 
-  // ✅ Se for GET com chave do frontend → libera (origem verificada separadamente)
-  if (req.method === 'GET' && apiKey === allowedApiKey) {
+  // ✅ Se tiver a API key do frontend válida → libera todos os métodos (GET, POST, PUT, DELETE)
+  if (apiKey && apiKey === allowedApiKey) {
     return next();
   }
 
