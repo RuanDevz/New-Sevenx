@@ -14,14 +14,33 @@ router.put('/renew-vip/:email', async (req, res) => {
     const currentDate = user.vipExpirationDate ? new Date(user.vipExpirationDate) : new Date();
     const newExpirationDate = new Date(currentDate.setDate(currentDate.getDate() + 30));
 
+    // Calcular tickets baseado no tier
+    let requestTickets = 0;
+    if (user.vipTier === 'diamond') {
+      requestTickets = 1;
+    } else if (user.vipTier === 'lifetime') {
+      requestTickets = 2;
+    }
+
+    // Data de reset dos tickets (próximo mês)
+    const now = new Date();
+    const resetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
     await User.update(
-      { vipExpirationDate: newExpirationDate, isDisabled: false, isVip: true },
+      { 
+        vipExpirationDate: newExpirationDate, 
+        isDisabled: false, 
+        isVip: true,
+        requestTickets: requestTickets,
+        requestTicketsResetDate: resetDate
+      },
       { where: { email } }
     );
 
     return res.status(200).json({
       message: 'VIP renovado com sucesso por +30 dias.',
       newExpirationDate,
+      requestTickets,
     });
   } catch (error) {
     console.error('Erro ao renovar VIP:', error);
@@ -42,14 +61,33 @@ router.put('/renew-vip-year/:email', async (req, res) => {
     const currentDate = user.vipExpirationDate ? new Date(user.vipExpirationDate) : new Date();
     const newExpirationDate = new Date(currentDate.setFullYear(currentDate.getFullYear() + 1));
 
+    // Calcular tickets baseado no tier
+    let requestTickets = 0;
+    if (user.vipTier === 'diamond') {
+      requestTickets = 1;
+    } else if (user.vipTier === 'lifetime') {
+      requestTickets = 2;
+    }
+
+    // Data de reset dos tickets (próximo mês)
+    const now = new Date();
+    const resetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
     await User.update(
-      { vipExpirationDate: newExpirationDate, isDisabled: false, isVip: true },
+      { 
+        vipExpirationDate: newExpirationDate, 
+        isDisabled: false, 
+        isVip: true,
+        requestTickets: requestTickets,
+        requestTicketsResetDate: resetDate
+      },
       { where: { email } }
     );
 
     return res.status(200).json({
       message: 'VIP renovado com sucesso por +1 ano.',
       newExpirationDate,
+      requestTickets,
     });
   } catch (error) {
     console.error('Erro ao renovar VIP por 1 ano:', error);

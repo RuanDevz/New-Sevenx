@@ -381,6 +381,20 @@ const AdminPanel: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => navigate("/admin/vip-requests")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors shadow-lg ${
+                isDark
+                  ? "bg-pink-600 hover:bg-pink-700 text-white"
+                  : "bg-pink-600 hover:bg-pink-700 text-white"
+              }`}
+            >
+              <Crown className="w-5 h-5" />
+              <span className="hidden sm:inline">VIP Requests</span>
+              <span className="sm:hidden">Requests</span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/admin-vip-users")}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors shadow-lg ${
                 isDark

@@ -13,7 +13,7 @@ const getVipExpirationDate = (planType) => {
 };
 
 router.post('/', async (req, res) => {
-  const { email, planType } = req.body;
+  const { email, planType, vipTier } = req.body;
 
   if (!email || !planType) {
     return res.status(400).json({ error: 'Email e tipo de plano são obrigatórios' });
@@ -40,15 +40,35 @@ router.post('/', async (req, res) => {
       }
     }
 
+    // Calcular tickets baseado no tier
+    const tier = vipTier || user.vipTier || 'diamond';
+    let requestTickets = 0;
+    if (tier === 'diamond') {
+      requestTickets = 1;
+    } else if (tier === 'lifetime') {
+      requestTickets = 2;
+    }
+
+    // Data de reset dos tickets (próximo mês)
+    const now = new Date();
+    const resetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
     await User.update(
       { 
         isVip: true, 
-        vipExpirationDate: vipExpirationDate 
+        vipExpirationDate: vipExpirationDate,
+        vipTier: tier,
+        subscriptionType: planType,
+        requestTickets: requestTickets,
+        requestTicketsResetDate: resetDate
       },
       { where: { email } }
     );
 
-    res.status(200).json({ message: 'Status VIP do usuário atualizado com sucesso' });
+    res.status(200).json({ 
+      message: 'Status VIP do usuário atualizado com sucesso',
+      requestTickets: requestTickets
+    });
   } catch (error) {
     console.error('Erro ao atualizar o status VIP:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });

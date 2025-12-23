@@ -79,7 +79,7 @@ const DownloadOptions: React.FC<DownloadOptionsProps> = ({ primaryLinks }) => {
     const vipLinks = [
       { label: 'MEGA 1', url: primaryLinks.linkG },
       { label: 'MEGA 2', url: primaryLinks.linkP },
-      { label: 'MEGA 3', url: primaryLinks.pixeldrain },
+      { label: 'Pixeldrain', url: primaryLinks.pixeldrain },
     ].filter(l => l.url);
 
     return (
@@ -112,13 +112,13 @@ const DownloadOptions: React.FC<DownloadOptionsProps> = ({ primaryLinks }) => {
   const vertiseLinks = [
     { label: 'MEGA 1', url: primaryLinks.linkG },
     { label: 'MEGA 2', url: primaryLinks.linkP },
-    { label: 'MEGA 3', url: primaryLinks.pixeldrain },
+    { label: 'Pixeldrain', url: primaryLinks.pixeldrain },
   ].filter(l => l.url);
 
   const admavenLinks = [
     { label: 'MEGA 1', url: primaryLinks.LINKMV1 },
     { label: 'MEGA 2', url: primaryLinks.LINKMV2 },
-    { label: 'MEGA 3', url: primaryLinks.LINKMV3 },
+    { label: 'Pixeldrain', url: primaryLinks.LINKMV3 },
   ].filter(l => l.url);
 
   return (

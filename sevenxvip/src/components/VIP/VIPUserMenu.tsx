@@ -237,7 +237,67 @@ const VIPUserMenu: React.FC<VIPUserMenuProps> = ({
                   VIP EXCLUSIVE
                 </div>
                 <div className="space-y-1">
-                
+                  {/* Submit Request */}
+                  <Link
+                    to="/vip-requests/submit"
+                    className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
+                    ${
+                      isDark
+                        ? "hover:bg-yellow-500/10 text-yellow-200"
+                        : "border hover:bg-yellow-100 hover:border-yellow-300 text-gray-800"
+                    }`}
+                    onClick={handleMenuToggle}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-lg bg-gradient-to-br from-green-500/20 to-yellow-500/20 flex items-center justify-center
+                      ${
+                        isDark ? "border border-transparent" : "border border-green-500/20"
+                      }`}
+                    >
+                      <i className="fa-solid fa-paper-plane text-green-400 text-sm"></i>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-sm font-bold">Submit Request</span>
+                      <p
+                        className={`text-xs ${
+                          isDark ? "text-yellow-400" : "text-gray-500"
+                        }`}
+                      >
+                        Request new content
+                      </p>
+                    </div>
+                  </Link>
+
+                  {/* Request History */}
+                  <Link
+                    to="/vip-requests/history"
+                    className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
+                    ${
+                      isDark
+                        ? "hover:bg-yellow-500/10 text-yellow-200"
+                        : "border hover:bg-yellow-100 hover:border-yellow-300 text-gray-800"
+                    }`}
+                    onClick={handleMenuToggle}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-yellow-500/20 flex items-center justify-center
+                      ${
+                        isDark ? "border border-transparent" : "border border-blue-500/20"
+                      }`}
+                    >
+                      <i className="fa-solid fa-clock-rotate-left text-blue-400 text-sm"></i>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-sm font-bold">Request History</span>
+                      <p
+                        className={`text-xs ${
+                          isDark ? "text-yellow-400" : "text-gray-500"
+                        }`}
+                      >
+                        View your requests
+                      </p>
+                    </div>
+                  </Link>
 
                   {/* VIP Asian */}
                   <Link
@@ -313,6 +373,36 @@ const VIPUserMenu: React.FC<VIPUserMenuProps> = ({
                     ADMIN CONTROLS
                   </div>
                   <div className="space-y-1">
+                    <Link
+                      to="/admin/vip-requests"
+                      className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
+                      ${
+                        isDark
+                          ? "hover:bg-red-500/10 text-yellow-200"
+                          : "border hover:bg-red-100 hover:border-red-300 text-gray-800"
+                      }`}
+                      onClick={handleMenuToggle}
+                    >
+                      <div
+                        className={`w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center
+                        ${
+                          isDark ? "border border-transparent" : "border border-pink-500/20"
+                        }`}
+                      >
+                        <i className="fa-solid fa-ticket text-pink-400 text-sm"></i>
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-sm font-bold">VIP Requests</span>
+                        <p
+                          className={`text-xs ${
+                            isDark ? "text-yellow-400" : "text-gray-500"
+                          }`}
+                        >
+                          Manage VIP requests
+                        </p>
+                      </div>
+                    </Link>
+
                     <Link
                       to="/admin/content-requests"
                       className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group

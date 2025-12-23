@@ -272,10 +272,12 @@ router.put('/admin/approve/:id', verifyToken, isAdmin, async (req, res) => {
       });
     }
 
+    console.log('REQ.USER:', req.user);
+  console.log('REQ.USERID:', req.userId);
+
     await request.update({
       status: 'approved',
       contentLink,
-      processedBy: adminId,
       processedAt: new Date()
     });
 
@@ -332,7 +334,6 @@ router.put('/admin/reject/:id', verifyToken, isAdmin, async (req, res) => {
     await request.update({
       status: 'rejected',
       rejectionReason: rejectionReason || 'No reason provided',
-      processedBy: adminId,
       processedAt: new Date()
     });
 

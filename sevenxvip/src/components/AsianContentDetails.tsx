@@ -193,7 +193,7 @@ const AsianContentDetails = () => {
 {content.preview && !previewError && (
   <div className="p-3">
     <a
-      href={content.link}
+      href={content.link || content.linkMV1}
       target="_blank"
       rel="noopener noreferrer"
       className={`group relative block rounded-md overflow-hidden border ${
