@@ -10,7 +10,7 @@ module.exports = function checkApiKey(req, res, next) {
   const allowedOrigins = [
     'https://sevenxleaks.com',
     'http://localhost:5173',
-    'https://newdesign-livid.vercel.app',
+    'https://new-sevenx-frontend.vercel.app',
     /.*\.vercel\.app$/
   ];
 
