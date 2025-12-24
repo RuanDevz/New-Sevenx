@@ -14,6 +14,7 @@ type MenuItem = {
   path: string;
   icon: string;
   external?: boolean;
+  mobileOnly?: boolean; // NEW: Items with this flag will only show on mobile
 };
 
 const VIPHeader: React.FC = () => {
@@ -24,7 +25,6 @@ const VIPHeader: React.FC = () => {
   const location = useLocation();
   const { theme } = useTheme();
   const isDark = theme === "dark";
-
   const token = localStorage.getItem("Token");
   const name = localStorage.getItem("name") || "";
 
@@ -67,15 +67,12 @@ const VIPHeader: React.FC = () => {
       { name: "VIP Western", path: "/vip-western", icon: "fa-solid fa-crown" },
       { name: "VIP Banned", path: "/vip-banned", icon: "fa-solid fa-ban" },
       { name: "VIP Unknown", path: "/vip-unknown", icon: "fa-regular fa-circle-question" },
-      { name: "Submit Request", path: "/vip-requests/submit", icon: "fa-solid fa-paper-plane" },
-      { name: "Request History", path: "/vip-requests/history", icon: "fa-solid fa-clock-rotate-left" },
+      // These items are HIDDEN on desktop, VISIBLE on mobile
+      { name: "Submit Request", path: "/vip-requests/submit", icon: "fa-solid fa-paper-plane", mobileOnly: true },
+      { name: "Request History", path: "/vip-requests/history", icon: "fa-solid fa-clock-rotate-left", mobileOnly: true },
     ];
 
-    const adminItems: MenuItem[] = isAdmin
-      ? [
-         
-        ]
-      : [];
+    const adminItems: MenuItem[] = isAdmin ? [] : [];
 
     const socialItems: MenuItem[] = [
       {
@@ -90,6 +87,9 @@ const VIPHeader: React.FC = () => {
   };
 
   const allMenuItems: MenuItem[] = getVIPMenuItems();
+  
+  // Desktop menu items: filter out mobileOnly items
+  const desktopMenuItems = allMenuItems.filter(item => !item.mobileOnly);
 
   return (
     <header
@@ -99,8 +99,8 @@ const VIPHeader: React.FC = () => {
           : "bg-gradient-to-r from-white via-yellow-100/20 to-white border-yellow-400/40"
       }`}
     >
-      <ChristmasBanner/>
-      {/* <r/> */}
+      <ChristmasBanner />
+      {/* <BlackFridayBanner/> */}
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
           {/* VIP Logo Section */}
@@ -121,9 +121,10 @@ const VIPHeader: React.FC = () => {
                   <Crown className="w-8 h-8 text-yellow-400" />
                 </div>
               </div>
-
               <div className="text-base sm:text-lg lg:text-xl font-bold tracking-wide font-orbitron">
-                <span className={isDark ? "text-yellow-400" : "text-yellow-600"}>SEVENXLEAKS</span>
+                <span className={isDark ? "text-yellow-400" : "text-yellow-600"}>
+                  SEVENXLEAKS
+                </span>
                 <span
                   className={`drop-shadow-lg ${
                     isDark ? "text-yellow-300" : "text-yellow-700"
@@ -132,7 +133,6 @@ const VIPHeader: React.FC = () => {
                   {getLogoText()}
                 </span>
               </div>
-
               <motion.div
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -142,10 +142,10 @@ const VIPHeader: React.FC = () => {
             </motion.div>
           </Link>
 
-          {/* Desktop VIP Navigation */}
+          {/* Desktop VIP Navigation - Uses desktopMenuItems (excludes mobileOnly items) */}
           <nav className="hidden lg:flex items-center space-x-4">
-            {allMenuItems
-              .filter(item => !item.external)
+            {desktopMenuItems
+              .filter((item) => !item.external)
               .map((item) => (
                 <Link
                   key={item.name}
@@ -162,15 +162,13 @@ const VIPHeader: React.FC = () => {
                   </span>
                   <div
                     className={`absolute inset-0 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 ${
-                      isDark
-                        ? "bg-yellow-500/10"
-                        : "bg-yellow-200/30"
+                      isDark ? "bg-yellow-500/10" : "bg-yellow-200/30"
                     }`}
                   ></div>
                 </Link>
               ))}
-            {allMenuItems
-              .filter(item => item.external)
+            {desktopMenuItems
+              .filter((item) => item.external)
               .map((item) => (
                 <a
                   key={item.name}
@@ -189,9 +187,7 @@ const VIPHeader: React.FC = () => {
                   </span>
                   <div
                     className={`absolute inset-0 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 ${
-                      isDark
-                        ? "bg-yellow-500/10"
-                        : "bg-yellow-200/30"
+                      isDark ? "bg-yellow-500/10" : "bg-yellow-200/30"
                     }`}
                   ></div>
                 </a>
@@ -209,7 +205,6 @@ const VIPHeader: React.FC = () => {
               isAdmin={isAdmin}
               setIsMenuOpen={setIsMenuOpen}
             />
-
             {/* Mobile Menu Toggle */}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -219,7 +214,11 @@ const VIPHeader: React.FC = () => {
             >
               <div className="w-6 h-6 flex flex-col justify-center items-center">
                 <motion.span
-                  animate={isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                  animate={
+                    isMobileMenuOpen
+                      ? { rotate: 45, y: 6 }
+                      : { rotate: 0, y: 0 }
+                  }
                   className="w-6 h-0.5 bg-current block transition-all duration-300 origin-center"
                 />
                 <motion.span
@@ -227,7 +226,11 @@ const VIPHeader: React.FC = () => {
                   className="w-6 h-0.5 bg-current block mt-1.5 transition-all duration-300"
                 />
                 <motion.span
-                  animate={isMobileMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+                  animate={
+                    isMobileMenuOpen
+                      ? { rotate: -45, y: -6 }
+                      : { rotate: 0, y: 0 }
+                  }
                   className="w-6 h-0.5 bg-current block mt-1.5 transition-all duration-300 origin-center"
                 />
               </div>
@@ -236,7 +239,7 @@ const VIPHeader: React.FC = () => {
         </div>
       </div>
 
-      {/* Full Screen Mobile Menu */}
+      {/* Full Screen Mobile Menu - Shows ALL items including mobileOnly */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -273,17 +276,25 @@ const VIPHeader: React.FC = () => {
                 className="flex items-center justify-center gap-4 mb-4"
               >
                 <Crown className="w-12 h-12 text-yellow-400" />
-                <h2 className={`text-3xl font-bold font-orbitron ${isDark ? "text-yellow-400" : "text-yellow-600"}`}>
+                <h2
+                  className={`text-3xl font-bold font-orbitron ${
+                    isDark ? "text-yellow-400" : "text-yellow-600"
+                  }`}
+                >
                   VIP MENU
                 </h2>
                 <Sparkles className="w-8 h-8 text-yellow-300" />
               </motion.div>
-              <div className={`w-32 h-1 mx-auto rounded-full ${
-                isDark ? "bg-gradient-to-r from-yellow-400 to-yellow-500" : "bg-gradient-to-r from-yellow-500 to-yellow-600"
-              }`}></div>
+              <div
+                className={`w-32 h-1 mx-auto rounded-full ${
+                  isDark
+                    ? "bg-gradient-to-r from-yellow-400 to-yellow-500"
+                    : "bg-gradient-to-r from-yellow-500 to-yellow-600"
+                }`}
+              ></div>
             </div>
 
-            {/* Menu Items */}
+            {/* Menu Items - ALL items shown on mobile */}
             <div className="px-8 py-6 space-y-3 max-h-[60vh] overflow-y-auto">
               {allMenuItems.map((item, index) => (
                 <motion.div
@@ -304,14 +315,24 @@ const VIPHeader: React.FC = () => {
                           : "text-gray-700 hover:text-yellow-700 hover:bg-yellow-100/50 hover:border-yellow-400/40"
                       }`}
                     >
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                        isDark ? "bg-yellow-500/20 border-yellow-500/30" : "bg-yellow-100 border-yellow-300"
-                      }`}>
+                      <div
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                          isDark
+                            ? "bg-yellow-500/20 border-yellow-500/30"
+                            : "bg-yellow-100 border-yellow-300"
+                        }`}
+                      >
                         <i className={`${item.icon} text-yellow-400`}></i>
                       </div>
                       <div className="flex-1">
                         <span className="font-medium text-lg">{item.name}</span>
-                        <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>External link</p>
+                        <p
+                          className={`text-sm ${
+                            isDark ? "text-gray-400" : "text-gray-600"
+                          }`}
+                        >
+                          External link
+                        </p>
                       </div>
                       <i className="fa-solid fa-external-link text-xs"></i>
                     </a>
@@ -325,14 +346,24 @@ const VIPHeader: React.FC = () => {
                           : "text-gray-700 hover:text-yellow-700 hover:bg-yellow-100/50 hover:border-yellow-400/40"
                       }`}
                     >
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                        isDark ? "bg-yellow-500/20 border-yellow-500/30" : "bg-yellow-100 border-yellow-300"
-                      }`}>
+                      <div
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                          isDark
+                            ? "bg-yellow-500/20 border-yellow-500/30"
+                            : "bg-yellow-100 border-yellow-300"
+                        }`}
+                      >
                         <i className={`${item.icon} text-yellow-400`}></i>
                       </div>
                       <div className="flex-1">
                         <span className="font-medium text-lg">{item.name}</span>
-                        <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>VIP exclusive</p>
+                        <p
+                          className={`text-sm ${
+                            isDark ? "text-gray-400" : "text-gray-600"
+                          }`}
+                        >
+                          VIP exclusive
+                        </p>
                       </div>
                       <i className="fa-solid fa-chevron-right text-xs"></i>
                     </Link>
@@ -340,35 +371,45 @@ const VIPHeader: React.FC = () => {
                 </motion.div>
               ))}
 
-              
-              
-
               {/* Account Section for Mobile */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                className={`pt-6 border-t space-y-3 ${isDark ? "border-yellow-500/30" : "border-yellow-400/40"}`}
+                className={`pt-6 border-t space-y-3 ${
+                  isDark ? "border-yellow-500/30" : "border-yellow-400/40"
+                }`}
               >
                 <Link to="/account" onClick={handleMobileMenuToggle}>
-                  <div className={`flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-300 border border-transparent backdrop-blur-sm ${
-                    isDark
-                      ? "text-gray-300 hover:text-yellow-300 hover:bg-yellow-500/10 hover:border-yellow-500/30"
-                      : "text-gray-700 hover:text-yellow-700 hover:bg-yellow-100/50 hover:border-yellow-400/40"
-                  }`}>
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                      isDark ? "bg-yellow-500/20 border-yellow-500/30" : "bg-yellow-100 border-yellow-300"
-                    }`}>
+                  <div
+                    className={`flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-300 border border-transparent backdrop-blur-sm ${
+                      isDark
+                        ? "text-gray-300 hover:text-yellow-300 hover:bg-yellow-500/10 hover:border-yellow-500/30"
+                        : "text-gray-700 hover:text-yellow-700 hover:bg-yellow-100/50 hover:border-yellow-400/40"
+                    }`}
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                        isDark
+                          ? "bg-yellow-500/20 border-yellow-500/30"
+                          : "bg-yellow-100 border-yellow-300"
+                      }`}
+                    >
                       <i className="fa-solid fa-user text-yellow-400" />
                     </div>
                     <div className="flex-1">
                       <span className="font-medium text-lg">My VIP Account</span>
-                      <p className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}>Manage your premium account</p>
+                      <p
+                        className={`text-sm ${
+                          isDark ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
+                        Manage your premium account
+                      </p>
                     </div>
                     <i className="fa-solid fa-chevron-right text-xs" />
                   </div>
                 </Link>
-
                 <button
                   onClick={() => {
                     localStorage.clear();

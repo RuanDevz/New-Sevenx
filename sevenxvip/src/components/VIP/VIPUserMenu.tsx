@@ -238,16 +238,17 @@ const VIPUserMenu: React.FC<VIPUserMenuProps> = ({
                 </div>
                 <div className="space-y-1">
                   {/* Submit Request */}
-                  <Link
-                    to="/vip-requests/submit"
-                    className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
-                    ${
-                      isDark
-                        ? "hover:bg-yellow-500/10 text-yellow-200"
-                        : "border hover:bg-yellow-100 hover:border-yellow-300 text-gray-800"
-                    }`}
-                    onClick={handleMenuToggle}
-                  >
+<Link
+  to="/vip-requests/submit"
+  className={`block md:hidden flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
+  ${
+    isDark
+      ? "hover:bg-yellow-500/10 text-yellow-200"
+      : "border hover:bg-yellow-100 hover:border-yellow-300 text-gray-800"
+  }`}
+  onClick={handleMenuToggle}
+>
+
                     <div
                       className={`w-8 h-8 rounded-lg bg-gradient-to-br from-green-500/20 to-yellow-500/20 flex items-center justify-center
                       ${
@@ -269,16 +270,16 @@ const VIPUserMenu: React.FC<VIPUserMenuProps> = ({
                   </Link>
 
                   {/* Request History */}
-                  <Link
-                    to="/vip-requests/history"
-                    className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
-                    ${
-                      isDark
-                        ? "hover:bg-yellow-500/10 text-yellow-200"
-                        : "border hover:bg-yellow-100 hover:border-yellow-300 text-gray-800"
-                    }`}
-                    onClick={handleMenuToggle}
-                  >
+<Link
+  to="/vip-requests/history"
+  className={`block md:hidden flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
+  ${
+    isDark
+      ? "hover:bg-yellow-500/10 text-yellow-200"
+      : "border hover:bg-yellow-100 hover:border-yellow-300 text-gray-800"
+  }`}
+  onClick={handleMenuToggle}
+>
                     <div
                       className={`w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500/20 to-yellow-500/20 flex items-center justify-center
                       ${
