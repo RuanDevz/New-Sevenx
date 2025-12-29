@@ -3,17 +3,13 @@
 
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripeService = require('../lib/stripeService');
 const { User } = require('../models');
 const sendConfirmationEmail = require('../Services/Emailsend');
 
 // Focus NFe
 const { nfseEnviar, nfseConsultar, nfseCancelar } = require('../lib/focus');
 const { buildFromInvoice } = require('../lib/nfse-factory');
-
-// Plans (mantidos caso precise em outros fluxos)
-const MONTHLY_PRICE_ID = process.env.STRIPE_PRICEID_MONTHLY;
-const ANNUAL_PRICE_ID  = process.env.STRIPE_PRICEID_ANNUAL;
 
 // util
 function toDateFromUnix(ts) {
@@ -84,12 +80,18 @@ router.post(
   '/',
   express.raw({ type: 'application/json' }),
   async (req, res) => {
-    const sig = req.headers['stripe-signature'];
-    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
     let event;
+    let stripe; // Stripe instance (PJ ou PF)
+
+    // Validar signature com ambas as contas
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+      const verified = stripeService.verifyWebhookSignature(
+        req.body,
+        req.headers['stripe-signature']
+      );
+      event = verified.event;
+      stripe = verified.stripe;
+      console.log(`[WEBHOOK] Conta: ${verified.account.toUpperCase()} | Event: ${event.type}`);
     } catch (err) {
       console.error('Erro na verificação do webhook:', err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
