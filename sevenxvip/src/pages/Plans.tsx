@@ -150,24 +150,24 @@ const Plans: React.FC = () => {
         { icon: Star, text: billingCycle === "annual" ? "2 Request tickets (2/month)" : "1 Request tickets (1/month)", highlight: true },
       ]
     },
- lifetime: {
-      name: "CHRISTMAS LIFETIME",
-      icon: Gift,
-      color: "red",
-      gradient: "from-red-600 to-red-700",
-      price: 199.99,
-      features: [
-        { icon: Gift, text: "🎄 LIFETIME ACCESS - Forever!", highlight: true },
-        { icon: Check, text: "Everything in DIAMOND" },
-        { icon: Crown, text: "Exclusive LIFETIME badge", highlight: true },
-        { icon: Flame, text: "2 Request tickets (2/month)", highlight: true },
-        { icon: Star, text: "Never pay again!", highlight: true },
-        { icon: Check, text: "All future features included" },
-        { icon: Check, text: "VIP priority support 24/7" },
-      ],
-      isPopular: true,
-      isLimited: true
-    }
+//  lifetime: {
+//       name: "CHRISTMAS LIFETIME",
+//       icon: Gift,
+//       color: "red",
+//       gradient: "from-red-600 to-red-700",
+//       price: 199.99,
+//       features: [
+//         { icon: Gift, text: "🎄 LIFETIME ACCESS - Forever!", highlight: true },
+//         { icon: Check, text: "Everything in DIAMOND" },
+//         { icon: Crown, text: "Exclusive LIFETIME badge", highlight: true },
+//         { icon: Flame, text: "2 Request tickets (2/month)", highlight: true },
+//         { icon: Star, text: "Never pay again!", highlight: true },
+//         { icon: Check, text: "All future features included" },
+//         { icon: Check, text: "VIP priority support 24/7" },
+//       ],
+//       isPopular: true,
+//       isLimited: true
+//     }
   };
 
   return (
@@ -362,7 +362,7 @@ const Plans: React.FC = () => {
             </motion.div>
 
             {/* lifetime Plan */}
-<div
+{/* <div
   className={`relative rounded-2xl p-6 border-4 backdrop-blur-xl flex flex-col transition-all duration-300
     ${
       isDark
@@ -370,9 +370,9 @@ const Plans: React.FC = () => {
         : "bg-gradient-to-br from-white/95 via-red-50/90 to-white/95 border-red-500/80 hover:border-red-600 shadow-red-500/40"
     }
   `}
->
+> */}
   {/* Christmas decorative background */}
-  <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-10">
+  {/* <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-10">
     <div
       className={`absolute top-0 left-1/4 w-32 h-32 rounded-full blur-3xl animate-pulse ${
         isDark ? "bg-red-700" : "bg-red-600"
@@ -388,7 +388,7 @@ const Plans: React.FC = () => {
   </div>
 
   {/* Limited Badge */}
-  <div
+  {/* <div
     className={`absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full font-black text-xs shadow-2xl border-2 animate-bounce
       ${
         isDark
@@ -398,10 +398,10 @@ const Plans: React.FC = () => {
     `}
   >
     🎅 LIMITED TIME OFFER
-  </div>
+  </div> */}
 
   {/* Header */}
-  <div className="flex items-center gap-3 mb-4 mt-2 relative">
+  {/* <div className="flex items-center gap-3 mb-4 mt-2 relative">
     <div
       className={`p-3 rounded-xl shadow-lg animate-pulse bg-gradient-to-br 
         ${isDark ? "from-red-700 to-red-800" : "from-red-600 to-red-700"}`}
@@ -421,10 +421,10 @@ const Plans: React.FC = () => {
         Lifetime Access
       </p>
     </div>
-  </div>
+  </div> */}
 
   {/* Price Section */}
-  <div className="mb-6 relative">
+  {/* <div className="mb-6 relative">
     <div className="flex items-baseline gap-2">
       <span
         className={`text-4xl font-black text-transparent bg-clip-text 
@@ -440,7 +440,7 @@ const Plans: React.FC = () => {
   </div>
 
   {/* Features List */}
-  <ul className="space-y-3 mb-6 relative flex-grow">
+  {/* <ul className="space-y-3 mb-6 relative flex-grow">
     {plans.lifetime.features.map((feature, index) => (
       <li
         key={index}
@@ -474,10 +474,10 @@ const Plans: React.FC = () => {
         </span>
       </li>
     ))}
-  </ul>
+  </ul> */}
 
   {/* CTA Button */}
-  <button
+  {/* <button
     onClick={() => handleAccessClick("lifetime")}
     className={`relative w-full py-3 rounded-xl font-bold text-base transition-all duration-300 overflow-hidden group border-2
       ${
@@ -494,9 +494,9 @@ const Plans: React.FC = () => {
   </button>
 
   {/* Christmas ornaments */}
-  <div className="absolute -top-2 -right-2 text-2xl opacity-70">🎅</div>
+  {/* <div className="absolute -top-2 -right-2 text-2xl opacity-70">🎅</div>
   <div className="absolute -bottom-2 -left-2 text-2xl opacity-70">⛄</div>
-</div>
+</div> */}
 
 
             {/* Diamond Plan */}
