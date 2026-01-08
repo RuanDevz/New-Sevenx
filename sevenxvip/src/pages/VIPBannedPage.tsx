@@ -98,6 +98,7 @@ const VIPBannedPage: React.FC = () => {
       sortBy: "postDate",
       sortOrder: sortOption === "oldest" ? "ASC" : "DESC",
       limit: "110",
+      category: "Banned"
     });
 
     if (searchName) params.append("search", searchName);

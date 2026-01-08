@@ -96,7 +96,8 @@ const VIPUnknownPage: React.FC = () => {
         page: page.toString(),
         sortBy: "postDate",
         sortOrder,
-        limit: "110"
+        limit: "110",
+        category: "Unknown"
       });
 
       if (searchName) params.append("search", searchName);

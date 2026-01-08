@@ -162,9 +162,7 @@ const SOURCES = [
   { key: 'vip-unknown', model: VipUnknownContent, contentType: 'vip-unknown' },
 ];
 
-/** ===========================
- *  Rota GET /search
- *  =========================== */
+
 router.get('/search', async (req, res) => {
   const t0 = Date.now();
 
@@ -173,12 +171,7 @@ router.get('/search', async (req, res) => {
   const sortBy = req.query.sortBy || 'postDate';
   const sortOrder = (String(req.query.sortOrder || 'DESC').toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
 
-  const rawQ = req.query.q ?? req.query.search;
-
-const q =
-  rawQ === undefined || rawQ === null
-    ? ' '
-    : rawQ.toString().trim() || ' ';
+  const q = (req.query.q ?? req.query.search)?.toString().trim() || undefined;
   const categories = req.query.categories
     ? req.query.categories.split(',').map(s => s.trim()).filter(Boolean)
     : (req.query.category ? [req.query.category.trim()] : undefined);

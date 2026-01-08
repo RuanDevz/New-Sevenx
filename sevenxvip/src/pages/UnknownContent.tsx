@@ -75,7 +75,7 @@ const UnknownContent: React.FC = () => {
         sortBy: "postDate",
         sortOrder: sortOption === "oldest" ? "ASC" : "DESC",
         limit: "110",
-        category: "Unknown"
+        category: "unknown"
       });
 
       if (searchName) params.append("search", searchName);
