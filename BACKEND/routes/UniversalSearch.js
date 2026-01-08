@@ -190,10 +190,12 @@ router.get('/search', async (req, res) => {
   try {
     const whereDate = createDateFilter(dateFilter, month);
 
-    const selectedSources = SOURCES.filter(src => {
-      if (contentType === 'all') return true;
-      return src.key === contentType || src.contentType === contentType;
-    });
+const selectedSources =
+  contentType === 'all'
+    ? SOURCES
+    : SOURCES.filter(
+        src => src.key === contentType || src.contentType === contentType
+      );
 
     // 🔥 evita saturar a pool do Supabase — executa até 3 buscas por vez
     const concurrencyLimit = 3;
