@@ -173,7 +173,12 @@ router.get('/search', async (req, res) => {
   const sortBy = req.query.sortBy || 'postDate';
   const sortOrder = (String(req.query.sortOrder || 'DESC').toUpperCase() === 'ASC') ? 'ASC' : 'DESC';
 
-  const q = (req.query.q ?? req.query.search)?.toString().trim() || undefined;
+  const rawQ = req.query.q ?? req.query.search;
+
+const q =
+  rawQ === undefined || rawQ === null
+    ? ' '
+    : rawQ.toString().trim() || ' ';
   const categories = req.query.categories
     ? req.query.categories.split(',').map(s => s.trim()).filter(Boolean)
     : (req.query.category ? [req.query.category.trim()] : undefined);
@@ -190,12 +195,10 @@ router.get('/search', async (req, res) => {
   try {
     const whereDate = createDateFilter(dateFilter, month);
 
-const selectedSources =
-  contentType === 'all'
-    ? SOURCES
-    : SOURCES.filter(
-        src => src.key === contentType || src.contentType === contentType
-      );
+    const selectedSources = SOURCES.filter(src => {
+      if (contentType === 'all') return true;
+      return src.key === contentType || src.contentType === contentType;
+    });
 
     // 🔥 evita saturar a pool do Supabase — executa até 3 buscas por vez
     const concurrencyLimit = 3;
